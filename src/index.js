@@ -1,22 +1,11 @@
-/*
- import React from 'react';
- import ReactDOM from 'react-dom';
- import App from './App';
- import './index.css';
-
- ReactDOM.render(
- <App />,
- document.getElementById('root')
- );
- */
 /* eslint-disable */
-var sample = require('lodash/fp/sample');
 import mojs from 'mo-js';
-import Shape from 'mo-js';
 import MojsPlayer from 'mojs-player';
 import {Howler, Howl} from 'howler';
-
 import './index.css';
+
+var sample = require('lodash/fp/sample');
+
 const LOGO = $('#logo_darneo');
 var moonSVG = require('./svg/1631-full-moon-svg.svg');
 const COORDINATES_X = {
@@ -104,7 +93,7 @@ const timeline = new mojs.Timeline({
     },
     onComplete: function () {
         console.log('end timeline');
-        Bamboo.hidePlants();
+        //Bamboo.hidePlants();
         //Stars.hideStars();
         //MoonRise.hideMoonRise();
         //removeOverflow();
@@ -446,11 +435,11 @@ class moon extends mojs.CustomShape {
     getShape() {
         return `
 <style type="text/css">
-	#areal {fill:url(#SVGID_1_);}
+	#areal .mountain0{fill:url(#SVGID_1_);}
 	#moon.st1{fill:url(#moon_1_);}
 </style>
 <g id="areal">
-	<radialGradient id="SVGID_1_" cx="50.5" cy="49.8078" r="49.6551" gradientUnits="userSpaceOnUse">
+	<radialGradient class="st0" id="SVGID_1_" cx="50.5" cy="49.8078" r="49.6551" gradientUnits="userSpaceOnUse">
 		<stop  offset="0" style="stop-color:#FFFFFF"/>
 		<stop  offset="1" style="stop-color:#000000;stop-opacity:0"/>
 	</radialGradient>
@@ -1957,6 +1946,8 @@ var MoonRise = {
             opacity:   {0: 1},
             scale:     1,
             radius:    75,
+            isRefreshState: true,
+            isShowEnd:      true
         });
 
         let moonArea = new mojs.Shape({
@@ -1973,6 +1964,8 @@ var MoonRise = {
             scale:         1,
             fill:          '#dad9d0',
             radius:        40,
+            isRefreshState: true,
+            isShowEnd:      true
         });
         moon.el.style['z-index'] = 949;
         moonArea.el.style['z-index'] = 949;
@@ -1993,6 +1986,9 @@ var MoonRise = {
             strokeWidth: 1,
             delay:       delay,
             duration:    duration,
+
+            isRefreshState: true,
+            isShowEnd:      true
         });
         mountains.el.style['z-index'] = 950;
         return mountains;
@@ -2015,6 +2011,9 @@ var MoonRise = {
             duration:         duration,
             strokeDasharray:  '100%',
             strokeDashoffset: {'100%': '200%'},
+
+            isRefreshState: true,
+            isShowEnd:      true
 
         });
         horizonLine.el.style['z-index'] = 948;
@@ -2061,14 +2060,12 @@ timeline.add(
 var playerPanel = new MojsPlayer({
     add:         timeline,
     isPlaying:   false,
-    isRepeat:    true,
-    progress:    5800,
-    isSaveState: true,
+    isSaveState: false,
 });
 
 $(playerPanel.stopButton.el).click(function () {
     sound.stop();
-    removeOverflow();
+    //removeOverflow();
     console.log('stopPlayEventButton');
 });
 window.timeline = timeline;
