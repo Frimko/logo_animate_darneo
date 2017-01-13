@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <!--
+      Notice the use of %PUBLIC_URL% in the tag above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+	<link rel="stylesheet" href="css/reset.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+	<script src="js/vendor/modernizr-custom.js"></script>
+    <title>React App11</title>
+</head>
+<body class="not-loaded">
+
+<div class="respon-meter"></div>
+
+<div class="wrap">
+	<div class="wrapper">
+
+		<header class="header">
+			<div class="container header__inner">
+
+				<div class="header__switcher"><span></span><span></span></div>
+
+				<a class="header__logo" href="#"></a>
+
+				<nav class="header__menu">
+					<ul>
+						<li><a href="#">Главная</a></li>
+						<li><a href="#">О нас</a></li>
+						<li class="active"><a href="#">1С-Битрикс</a>
+							<div class="header__submenu">
+								<div class="container">
+									<ul>
+										<li><a href="#">Готовые решения</a></li>
+										<li><a href="#">Интеграция 1С</a></li>
+										<li><a href="#">Битрикс 24</a></li>
+										<li><a href="#">Композитный сайт</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li><a href="#">Услуги</a></li>
+						<li><a href="#">Наши работы</a></li>
+						<li><a href="#">Контакты</a></li>
+						<li><a href="#">Блог</a></li>
+					</ul>
+				</nav>
+
+				<div class="header__right">
+					<a href="#quote" class="btn btn--thin quote-open">Оставить заявку</a>
+				</div>
+
+			</div>
+
+			<div class="header__overlay">
+				<div class="header__overlay-scroll">
+					<div class="container">
+					</div>
+				</div>
+			</div>
+
+		</header>
+
+		<div class="h-overlay"></div>
+
+		<div class="intro">
+			<div class="intro__inner">
+				<div class="intro__middle text-align-center">
+					<div class="container">
+						<h1 class="intro__title">
+							<div class="logo"></div>
+                            <div id="animate_logo">
+
+                            </div>
+                            <span class="intro__title-inner"></span>
+                        </h1>
+                        <div class="play">play</div>
+                        <div class="stop">stop</div>
+						<div class="time"><input value="0" type="text" style="width: 60px; height: 20px"></div>
+						<div class="intro__summary">
+							<p>Разработка, дизайн и техническая поддержка веб-сайтов на системе управления сайтом 1С-Битрикс</p>
+						</div>
+						<div class="intro__actions">
+							<a href="#quote" class="btn quote-open">Заказать бесплатную консультацию</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="sidebar sidebar--quote" id="quote">
+
+		<div class="sidebar__close quote-close sidebar-close"></div>
+
+		<div class="sidebar__scroll">
+
+			<div class="sidebar__title nowrap"><span class="icon-mail-w-arrow-outline"></span>Оставить заявку</div>
+
+			<form class="form form-validate" action="" method="post" data-action="ajax/form-success.json" data-message="#quote-message" autocomplete="off">
+
+				<div class="form__items">
+
+					<div class="form__item">
+						<div class="form__item-field">
+							<div class="textfield-icon"><span class="icon-user-grey"></span></div>
+							<input type="text" class="textfield required" placeholder="Введите ваше имя">
+						</div>
+					</div>
+
+					<div class="form__item">
+						<div class="form__item-field">
+							<div class="textfield-icon"><span class="icon-phone-grey"></span></div>
+							<input type="text" class="textfield mask-phone required" placeholder="Введите ваш телефон">
+						</div>
+					</div>
+
+					<div class="form__item">
+						<div class="form__item-field">
+							<div class="textfield-icon"><span class="icon-paper-aero-grey"></span></div>
+							<input type="text" class="textfield email-validate required" placeholder="Введите ваш e-mail">
+						</div>
+					</div>
+
+				</div>
+
+				<div class="form__actions text-align-right">
+					<div class="form__actions-tip text-align-left">Или напишите нам<br>на: <a href="mailto:info@darneo.ru">info@darneo.ru</a></div>
+					<button type="submit" class="btn">Отправить</button>
+				</div>
+
+			</form>
+
+		</div>
+
+		<div class="sidebar__footer text-align-center">
+			<a href="#contacts" class="btn btn--nobg btn--muted-blue overlay-open"><span class="icon-paper-aero"></span>Схема проезда</a>
+		</div>
+
+	</div>
+
+	<div class="overlay" id="contacts">
+		<div class="overlay__inner">
+
+			<div class="map map--absolute" data-center="52.263435, 104.263166" data-point="52.263435, 104.263166" data-zoom="17" data-pan-by-selector=".map-marker-offset"></div>
+
+			<div class="map-marker-offset"></div>
+
+			<div class="sidebar active">
+
+				<div class="sidebar__close overlay-close"></div>
+
+				<div class="sidebar__title"><span class="icon-map-marker-outline"></span>Наш адрес</div>
+
+				<div class="contacts">
+
+					<div class="contact">
+						<p>г. Иркутск, ул. Лермонтова, 83А,<br>
+							офис 310</p>
+					</div>
+
+					<div class="contact">
+						<p><span class="icon-phone-outline"></span>+7 (3952) <strong>71-60-42</strong></p>
+						<p><span class="icon-mail-outline"></span><a href="mailto:info@darneo.ru">info@darneo.ru</a></p>
+					</div>
+
+				</div>
+
+				<div class="sidebar__footer text-align-center">
+					<a href="#" class="btn btn--muted-blue overlay-close"><span class="icon-paper-aero"></span>Схема проезда</a>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+</div>
+
+<div class="clear"></div>
+<script src="js/vendor/jquery-1.11.3.min.js"></script>
+
+</body>
+</html>

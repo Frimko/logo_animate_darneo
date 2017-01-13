@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="svg2" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 101 99.6"
+	 style="enable-background:new 0 0 101 99.6;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:url(#path4528_1_);}
+</style>
+<g id="Слой_2">
+	<radialGradient id="SVGID_1_" cx="50.5" cy="49.8078" r="49.6551" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="1" style="stop-color:#000000;stop-opacity:0"/>
+	</radialGradient>
+	<rect x="0.5" y="0.5" class="st0" width="100" height="98.6"/>
+</g>
+<radialGradient id="path4528_1_" cx="-140.6154" cy="682.5359" r="39.8524" gradientTransform="matrix(0.6995 0 0 -0.7135 145.1914 532.9861)" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#EBEAE5"/>
+	<stop  offset="1" style="stop-color:#C0BDAD"/>
+</radialGradient>
+<path id="path4528" class="st1" d="M74.7,50.4C74.7,63.4,64.1,74,51.1,74S27.4,63.4,27.4,50.4c0,0,0,0,0,0
+	c0-13.1,10.6-23.7,23.6-23.7C64.1,26.7,74.7,37.3,74.7,50.4C74.7,50.4,74.7,50.4,74.7,50.4z"/>
+</svg>

@@ -1,0 +1,54 @@
+@import "bourbon/bourbon";
+  
+@mixin box-sizing($value: border-box) {
+  -webkit-box-sizing: $value;
+  -moz-box-sizing: $value;
+  box-sizing: $value;
+}
+
+@mixin column-break-inside($value: avoid, $value2: avoid-column) {
+	-webkit-column-break-inside: $value;
+	-moz-column-break-inside: $value;
+	-o-column-break-inside: $value;
+	-ms-column-break-inside: $value;
+	column-break-inside: $value;
+	break-inside: $value2;
+}
+
+@mixin opacity($opacity: 1) {
+  opacity: $opacity;
+  filter: alpha(opacity=$opacity * 100);
+}
+
+@mixin clearfix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+
+$color1: #282828;
+$color2: #46accb;
+$color3: #3e9abc;
+$ts: 0.3s;
+
+
+
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-300', 300, normal, $file-formats: eot woff woff2 svg ttf);
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-300italic', 300, italic, $file-formats: eot woff woff2 svg ttf);
+
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-regular', 400, normal, $file-formats: eot woff woff2 svg ttf);
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-italic', 400, italic, $file-formats: eot woff woff2 svg ttf);
+
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-600', 600, normal, $file-formats: eot woff woff2 svg ttf);
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-600italic', 600, italic, $file-formats: eot woff woff2 svg ttf);
+
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-700', 700, normal, $file-formats: eot woff woff2 svg ttf);
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-700italic', 700, italic, $file-formats: eot woff woff2 svg ttf);
+
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-800', 800, normal, $file-formats: eot woff woff2 svg ttf);
+@include font-face("Open Sans", '../font/open-sans-v13-latin_cyrillic-800italic', 800, italic, $file-formats: eot woff woff2 svg ttf);
+
+$mainFont: "Open Sans", Arial, Helvetica, sans-serif;
