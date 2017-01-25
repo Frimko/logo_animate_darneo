@@ -2,13 +2,10 @@
 import mojs from 'mo-js';
 import MojsPlayer from 'mojs-player';
 import {Howler, Howl} from 'howler';
-import './index.css';
-
-var sample = require('lodash/fp/sample');
-
-const LOGO = $('#logo_darneo');
-var moonSVG = require('./svg/1631-full-moon-svg.svg');
-const COORDINATES_X = {
+import FirstRainbow from './FirstRainbow';
+mojs.isDebug = true;
+const PARAMS = {};
+PARAMS.COORDINATES_X = {
     str1: {
         'D': '-530',
         'A': '-414',
@@ -26,274 +23,15 @@ const COORDINATES_X = {
         'O': '501',
     }
 };
-/*var point = new mojs.Shape({
- x:           225,
- y:           -55,
- fill:        'transparent',
- stroke:      '#FD5061',
- fillOpacity: 1,
- delay:       0,
- radius:      6,
- strokeWidth: 3,
- duration:    400,
- }).play();*/
+PARAMS.startPointY = -100;
+PARAMS.EndPointY = 55;
+PARAMS.parentTag = '#animate_logo';
 
-const startPointY = -100;
-const EndPointY = 55;
-const parentTag = '#animate_logo';
-const defaultParams = {
-    parent: parentTag,
-    y:      {[startPointY]: EndPointY},
-};
-const COLORS = ['#F9DD5E', '#FC2D79', '#11CDC5'];
-const defaultParamsForBurstChild = {
-    shape:       'line',
-    stroke:      COLORS,
-    radius:      60,
-    strokeWidth: 8,
-    isForce3d:   true,
-};
+PARAMS.COLORS = ['#F9DD5E', '#FC2D79', '#11CDC5'];
 
-
-var addOverflow = function () {
-    if ($('.shadow').length == 0) {
-        $('.logo').after($('.logo').clone().addClass('shadow'));
-        $('.logo').after($('<div>').addClass('overflow_logo'));
-        $('.shadow, .overflow_logo').animate({
-            opacity: .9
-        }, 700);
-    }
-};
-var removeOverflow = function () {
-    $('.shadow , .overflow_logo').animate({
-        opacity: 0
-    }, 700, function () {
-        $(this).remove();
-    })
-};
-function getSecondsToday() {
-    var now = new Date();
-
-// создать объект из текущей даты, без часов-минут-секунд
-    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-    var diff = now - today; // разница в миллисекундах
-    console.clear();
-    return Math.floor(diff); // перевести в секунды
-}
-
-var sound = new Howl({
-    src: ['din-dong.mp3']
-});
-const timeline = new mojs.Timeline({
-    delay:      1000,
-    onStart:    function () {
-        console.log('start timeline');
-        //sound.stop();
-    },
-    onComplete: function () {
-        console.log('end timeline');
-        //Bamboo.hidePlants();
-        //Stars.hideStars();
-        //MoonRise.hideMoonRise();
-        //removeOverflow();
-    }
-});
-var FirstRainbow = {
-
-    defaultParamsForBurst: {
-        parent:         parentTag,
-        y:              {[startPointY]: EndPointY},
-        count:          3,
-        degree:         7,
-        radius:         {250: 0},
-        isRefreshState: false,
-        isShowEnd:      false
-    },
-
-    rainbow: function (duration, delay, simbol, word, number) {
-        let point;
-        if (!isNaN(number)) {
-            point = COORDINATES_X[word][simbol][Number(number)];
-        } else {
-            point = COORDINATES_X[word][simbol]
-        }
-
-        let params = {
-            ...this.defaultParamsForBurst,
-            children: {
-                ...defaultParamsForBurstChild,
-                duration: duration,
-                delay:    delay
-            }
-        };
-
-        return [
-            new mojs.Burst(params).tune({x: point, y: EndPointY}),
-            this.burstRainbowEnd((delay + duration), simbol, word, number)
-        ];
-    },
-
-    firstD:           function () {
-        let firstBurst = new mojs.Burst({
-            ...this.defaultParamsForBurst,
-            children:      {
-                ...defaultParamsForBurstChild,
-                duration: 200,
-                delay:    300,
-            },
-            onStart:       function () {
-                //sound.play('start');
-                console.log('onStart');
-            },
-            onRepeatStart: function () {
-                /*                sound.stop();
-                 sound.play('start');*/
-                console.log('onRepeatStart');
-            },
-        }).tune({x: COORDINATES_X.str1['D'], y: EndPointY});
-
-        return [firstBurst, this.burstRainbowEnd(500, 'D', 'str1')];
-    },
-    /*стандартный эффект*/
-    burstRainbowEnd1: function (delay, simbol, word, number) {
-        let point;
-        if (!isNaN(number)) {
-            point = COORDINATES_X[word][simbol][Number(number)];
-        } else {
-            point = COORDINATES_X[word][simbol]
-        }
-        return new mojs.Burst({
-            parent:   parentTag,
-            y:        EndPointY - 30,
-            degree:   180,
-            angle:    90,
-            radius:   {10: 25},
-            count:    5,
-            children: {
-                shape:            'line',
-                radius:           5,
-                radiusY:          0,
-                scale:            1,
-                strokeDasharray:  '100%',
-                strokeDashoffset: {'-100%': '100%'},
-                stroke:           ['#F9DD5E', '#FC2D79', '#11CDC5'],
-                easing:           'linear.none',
-                duration:         800,
-                delay:            delay
-            }
-        }).tune({x: point, y: EndPointY});
-    },
-    /*модифицированный эффект*/
-    burstRainbowEnd:  function (delay, simbol, word, number) {
-        let point;
-        if (!isNaN(number)) {
-            point = COORDINATES_X[word][simbol][Number(number)];
-        } else {
-            point = COORDINATES_X[word][simbol]
-        }
-        const RADIUS = 20;
-
-        const CIRCLE_RADIUS = 25;
-        const circle = function (addDuration) {
-            return new mojs.Shape({
-                parent:           parentTag,
-                strokeDasharray:  '100%',
-                strokeDashoffset: {'50%': '50%'},
-                stroke:           {'#E5214A': '#37e3f5'},
-                strokeWidth:      {3: 0},
-                fill:             'none',
-                scale:            {0: 1},
-                radius:           CIRCLE_RADIUS,
-                duration:         400 + (addDuration ? addDuration : 0),
-                delay:            delay,
-                easing:           'cubic.out'
-
-            });
-        };
-        const burst = new mojs.Burst({
-            parent:   parentTag,
-            radius:   {4: RADIUS},
-            count:    20,
-            y:        EndPointY - 30,
-            degree:   180,
-            angle:    90,
-            children: {
-                radius:      1,
-                fill:        [
-                    {'#9EC9F5': '#9ED8C6'},
-                    {'#91D3F7': '#9AE4CF'},
-
-                    {'#DC93CF': '#E3D36B'},
-                    {'#CF8EEF': '#CBEB98'},
-
-                    {'#87E9C6': '#1FCC93'},
-                    {'#A7ECD0': '#9AE4CF'},
-
-                    {'#87E9C6': '#A635D9'},
-                    {'#D58EB3': '#E0B6F5'},
-
-                    {'#F48BA2': '#CF8EEF'},
-                    {'#91D3F7': '#A635D9'},
-
-                    {'#CF8EEF': '#CBEB98'},
-                    {'#87E9C6': '#A635D9'},
-                ],
-                scale:       {1: 0, easing: 'quad.in'},
-                pathScale:   [.8, null],
-                degreeShift: [13, null],
-                duration:    [400, 700],
-                easing:      'quint.out',
-                delay:       delay
-            }
-        });
-        return [
-            burst.tune({x: point, y: EndPointY}),
-            circle().tune({x: point, y: EndPointY}),
-            circle(400).tune({x: point, y: EndPointY}),
-            circle(800).tune({x: point, y: EndPointY}),
-        ];
-    },
-
-    getTimeLine: function () {
-        return [
-            this.firstD(),
-
-            ...this.rainbow(200, 500, 'A', 'str1'),
-            ...this.rainbow(200, 850, 'R', 'str1', 0),
-            ...this.rainbow(200, 850, 'R', 'str1', 1),
-            ...this.rainbow(200, 1400, 'N', 'str1', 0),
-            ...this.rainbow(200, 1400, 'N', 'str1', 1),
-            ...this.rainbow(200, 2000, 'E', 'str1'),
-            ...this.rainbow(200, 2500, 'O', 'str1'),
-
-            ...this.rainbow(200, 3200, 'S', 'str2'),
-            ...this.rainbow(200, 3700, 'T', 'str2'),
-            ...this.rainbow(200, 4300, 'U', 'str2', 0),
-            ...this.rainbow(200, 4300, 'U', 'str2', 1),
-            ...this.rainbow(200, 5000, 'D', 'str2'),
-            ...this.rainbow(200, 5350, 'I', 'str2'),
-            ...this.rainbow(200, 5600, 'O', 'str2'),
-
-            ...this.rainbow(200, 6150, 'O', 'str1'),
-            ...this.rainbow(200, 6150, 'D', 'str2'),
-
-            ...this.rainbow(200, 6800, 'R', 'str1', 0),
-            ...this.rainbow(200, 6800, 'T', 'str2'),
-
-            ...this.rainbow(200, 7400, 'O', 'str1'),
-            ...this.rainbow(200, 7400, 'S', 'str2'),
-
-            ...this.rainbow(200, 7900, 'D', 'str1'),
-            ...this.rainbow(200, 7900, 'O', 'str2'),
-
-            ...this.rainbow(200, 8400, 'R', 'str1', 0),
-            ...this.rainbow(200, 8400, 'D', 'str2'),
-        ]
-
-    },
-};
-
+import './index.css';
+//import './resorce.js';
+var sample = require('lodash/fp/sample');
 class elipceD extends mojs.CustomShape {
     getShape() {
         return '<path d="M0,120.5h13.9c39.6,0,59.6-30.6,59.1-61C73,29.8,52.8-0.2,13.3,0L0.1,0"/>'
@@ -514,6 +252,108 @@ mojs.addShape('mountains', mountains);
 mojs.addShape('horizontLine', horizontLine);
 mojs.addShape('moon', moon);
 mojs.addShape('lilium', lilium);
+let TimeLineFR = new FirstRainbow({
+    PARAMS:PARAMS,
+    defaultParamsForBurstChild: {
+        shape:       'line',
+        stroke:      PARAMS.COLORS,
+        radius:      60,
+        strokeWidth: 8,
+        isForce3d:   true,
+    },
+    defaultParamsForBurst:      {
+        parent:         PARAMS.parentTag,
+        y:              {[PARAMS.startPointY]: PARAMS.EndPointY},
+        count:          3,
+        degree:         7,
+        radius:         {250: 0},
+        isRefreshState: false,
+        isShowEnd:      false
+    },
+    timeLine(o) {
+        let that = o;
+        return [
+            that.firstD(),
+
+            ...that.rainbow(200, 500, 'A', 'str1'),
+            ...that.rainbow(200, 850, 'R', 'str1', 0),
+            ...that.rainbow(200, 850, 'R', 'str1', 1),
+            ...that.rainbow(200, 1400, 'N', 'str1', 0),
+            ...that.rainbow(200, 1400, 'N', 'str1', 1),
+            ...that.rainbow(200, 2000, 'E', 'str1'),
+            ...that.rainbow(200, 2500, 'O', 'str1'),
+
+            ...that.rainbow(200, 3200, 'S', 'str2'),
+            ...that.rainbow(200, 3700, 'T', 'str2'),
+            ...that.rainbow(200, 4300, 'U', 'str2', 0),
+            ...that.rainbow(200, 4300, 'U', 'str2', 1),
+            ...that.rainbow(200, 5000, 'D', 'str2'),
+            ...that.rainbow(200, 5350, 'I', 'str2'),
+            ...that.rainbow(200, 5600, 'O', 'str2'),
+
+            ...that.rainbow(200, 6150, 'O', 'str1'),
+            ...that.rainbow(200, 6150, 'D', 'str2'),
+
+            ...that.rainbow(200, 6800, 'R', 'str1', 0),
+            ...that.rainbow(200, 6800, 'T', 'str2'),
+
+            ...that.rainbow(200, 7400, 'O', 'str1'),
+            ...that.rainbow(200, 7400, 'S', 'str2'),
+
+            ...that.rainbow(200, 7900, 'D', 'str1'),
+            ...that.rainbow(200, 7900, 'O', 'str2'),
+
+            ...that.rainbow(200, 8400, 'R', 'str1', 0),
+            ...that.rainbow(200, 8400, 'D', 'str2'),
+        ]
+    }
+});
+console.log(TimeLineFR);
+var addOverflow = function () {
+    if ($('.shadow').length == 0) {
+        $('.logo').after($('.logo').clone().addClass('shadow'));
+        $('.logo').after($('<div>').addClass('overflow_logo'));
+        $('.shadow, .overflow_logo').animate({
+            opacity: .9
+        }, 700);
+    }
+};
+var removeOverflow = function () {
+    $('.shadow , .overflow_logo').animate({
+        opacity: 0
+    }, 700, function () {
+        $(this).remove();
+    })
+};
+function getSecondsToday() {
+    var now = new Date();
+
+// создать объект из текущей даты, без часов-минут-секунд
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    var diff = now - today; // разница в миллисекундах
+    console.clear();
+    return Math.floor(diff); // перевести в секунды
+}
+
+var sound = new Howl({
+    src: ['din-dong.mp3']
+});
+const timeline = new mojs.Timeline({
+    delay:      1000,
+    onStart:    function () {
+        console.log('start timeline');
+        //sound.stop();
+    },
+    onComplete: function () {
+        console.log('end timeline');
+        //Bamboo.hidePlants();
+        //Stars.hideStars();
+        //MoonRise.hideMoonRise();
+        //removeOverflow();
+    }
+});
+
 //TODO заменить на лодаш
 function randomArrayItem(arr) {
     var rand = Math.floor(Math.random() * arr.length);
@@ -525,7 +365,7 @@ var Bamboo = {
         const RADIUS = 15;
         const circle = function (addDuration) {
             return new mojs.Shape({
-                parent:      parentTag,
+                parent:      PARAMS.parentTag,
                 stroke:      {'#E5214A': '#37e3f5'},
                 strokeWidth: {3: 0},
                 fill:        'none',
@@ -538,7 +378,7 @@ var Bamboo = {
             });
         };
         const burst = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             radius:   {4: RADIUS},
             angle:    45,
             count:    10,
@@ -578,9 +418,9 @@ var Bamboo = {
             circle(800).tune(coords),
         ];
     },
-    lilium: function (duration, delay, coords) {
+    lilium:   function (duration, delay, coords) {
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -590,7 +430,7 @@ var Bamboo = {
             children: {
                 className:        'lilium',
                 shape:            'lilium',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 //fill:             '#E0B6F5',
                 radius:           100,
@@ -612,18 +452,18 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             angle:    90,
-            y:        EndPointY,
+            y:        PARAMS.EndPointY,
             children: {
                 className:        'hor_line',
                 shape:            'line',
                 stroke:           ['#11CDC5', '#FC2D79', '#F9DD5E'],
                 scale:            1,
-                y:                EndPointY,
+                y:                PARAMS.EndPointY,
                 radius:           600,
                 strokeWidth:      6,
                 duration:         duration,
@@ -645,18 +485,18 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             angle:    90,
-            y:        EndPointY - 90,
+            y:        PARAMS.EndPointY - 90,
             children: {
                 className:        'hor_line',
                 shape:            'line',
                 stroke:           ['#11CDC5', '#FC2D79', '#F9DD5E'],
                 scale:            1,
-                y:                EndPointY - 90,
+                y:                PARAMS.EndPointY - 90,
                 radius:           600,
                 strokeWidth:      6,
                 duration:         duration,
@@ -678,15 +518,15 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_d_1',
-                x:                COORDINATES_X.str1['D'],
+                x:                PARAMS.COORDINATES_X.str1['D'],
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -698,13 +538,13 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str1['D'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str1['D'], y: PARAMS.EndPointY - 45});
 
         const equal = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
-            x:        +COORDINATES_X.str1.D + 34,
+            x:        +PARAMS.COORDINATES_X.str1.D + 34,
             y:        3,
             degree:   0,
             children: {
@@ -713,7 +553,7 @@ var Bamboo = {
                 angle:            -90,
                 shape:            'elipceD',
                 fill:             'none',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radiusY:          32.5,
                 radiusX:          40,
@@ -730,7 +570,7 @@ var Bamboo = {
         $(equal.el.children).css('height', '180');
         return [
             leftLine,
-            ...this.bubble(duration, +delay + 600, {x: COORDINATES_X.str1['D'], y: EndPointY - 85}),
+            ...this.bubble(duration, +delay + 600, {x: PARAMS.COORDINATES_X.str1['D'], y: PARAMS.EndPointY - 85}),
             equal,
         ]
     },
@@ -740,14 +580,14 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   0,
             degree:   0,
             angle:    0,
             children: {
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           45,
                 strokeWidth:      6,
@@ -759,24 +599,24 @@ var Bamboo = {
                 }
             }
         }).tune({
-            x: COORDINATES_X.str1['A'],
-            y: EndPointY - 45
+            x: PARAMS.COORDINATES_X.str1['A'],
+            y: PARAMS.EndPointY - 45
         })
             .then({
-                x:     COORDINATES_X.str1['A'] - 16,
+                x:     PARAMS.COORDINATES_X.str1['A'] - 16,
                 angle: 25,
-                y:     EndPointY - 44
+                y:     PARAMS.EndPointY - 44
             });
 
         const rightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   0,
             degree:   0,
             angle:    0,
             children: {
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           45,
                 strokeWidth:      6,
@@ -788,26 +628,26 @@ var Bamboo = {
                 }
             }
         }).tune({
-            x: +COORDINATES_X.str1['A'],
-            y: EndPointY - 45
+            x: +PARAMS.COORDINATES_X.str1['A'],
+            y: PARAMS.EndPointY - 45
         })
             .then({
-                x:     +COORDINATES_X.str1['A'] + 16,
+                x:     +PARAMS.COORDINATES_X.str1['A'] + 16,
                 angle: -25,
-                y:     EndPointY - 44
+                y:     PARAMS.EndPointY - 44
             });
 
         const horLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   0,
             degree:   0,
             angle:    90,
-            x:        COORDINATES_X.str1['A'],
-            y:        EndPointY - 20,
+            x:        PARAMS.COORDINATES_X.str1['A'],
+            y:        PARAMS.EndPointY - 20,
             children: {
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           0,
                 radiusX:          0,
@@ -828,7 +668,7 @@ var Bamboo = {
             leftLine,
             rightLine,
             horLine,
-            ...this.bubble(duration, +delay + 600, {x: COORDINATES_X.str1['A'], y: EndPointY - 20})
+            ...this.bubble(duration, +delay + 600, {x: PARAMS.COORDINATES_X.str1['A'], y: PARAMS.EndPointY - 20})
         ]
     },
     plant_R:  function (duration, delay) {
@@ -837,15 +677,15 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_r_1',
-                x:                COORDINATES_X.str1['R'][0],
+                x:                PARAMS.COORDINATES_X.str1['R'][0],
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -857,12 +697,12 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str1['R'][0], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str1['R'][0], y: PARAMS.EndPointY - 45});
         const equal = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
-            x:        +COORDINATES_X.str1['R'][0] + 34,
+            x:        +PARAMS.COORDINATES_X.str1['R'][0] + 34,
             y:        3,
             degree:   0,
             children: {
@@ -870,7 +710,7 @@ var Bamboo = {
                 angle:            -90,
                 shape:            'elipceR',
                 fill:             'none',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radiusY:          32,
                 radiusX:          40,
@@ -885,10 +725,10 @@ var Bamboo = {
             }
         });
         const equal2 = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
-            x:        +COORDINATES_X.str1['R'][0] + 34,
+            x:        +PARAMS.COORDINATES_X.str1['R'][0] + 34,
             y:        3,
             degree:   0,
             children: {
@@ -897,7 +737,7 @@ var Bamboo = {
                 angle:            -90,
                 shape:            'elipceR2',
                 fill:             'none',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radiusY:          32,
                 radiusX:          40,
@@ -912,7 +752,7 @@ var Bamboo = {
             }
         });
         const rightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -920,7 +760,7 @@ var Bamboo = {
             children: {
                 className:        'label_r_4',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           20,
                 radiusY:          20,
@@ -932,14 +772,14 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str1['R'][0] + 40, y: EndPointY - 19});
+        }).tune({x: +PARAMS.COORDINATES_X.str1['R'][0] + 40, y: PARAMS.EndPointY - 19});
 
         return [
             leftLine,
             equal,
             equal2,
             rightLine,
-            ...this.bubble(duration, +delay + +duration, {x: +COORDINATES_X.str1['R'][0] + 31, y: EndPointY - 37})
+            ...this.bubble(duration, +delay + +duration, {x: +PARAMS.COORDINATES_X.str1['R'][0] + 31, y: PARAMS.EndPointY - 37})
         ]
     },
     plant_N:  function (duration, delay) {
@@ -948,14 +788,14 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_n_1',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -967,16 +807,16 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str1['N'][0], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str1['N'][0], y: PARAMS.EndPointY - 45});
         const rightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_n_2',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -988,9 +828,9 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str1['N'][1], y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str1['N'][1], y: PARAMS.EndPointY - 45});
         const leftLineToRight = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1000,7 +840,7 @@ var Bamboo = {
                 rx:               0,
                 ry:               0,
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           27,
                 strokeWidth:      6,
@@ -1011,9 +851,9 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str1['N'][0] + 10, y: +EndPointY - 70});
+        }).tune({x: +PARAMS.COORDINATES_X.str1['N'][0] + 10, y: +PARAMS.EndPointY - 70});
         const rightLineToLeft = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1023,7 +863,7 @@ var Bamboo = {
                 rx:               0,
                 ry:               0,
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           27,
                 strokeWidth:      6,
@@ -1034,14 +874,14 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str1['N'][1] - 13, y: +EndPointY - 24});
+        }).tune({x: +PARAMS.COORDINATES_X.str1['N'][1] - 13, y: +PARAMS.EndPointY - 24});
 
         return [
             leftLine,
             rightLine,
             leftLineToRight,
-            ...this.bubble(duration, +delay + 700, {x: +COORDINATES_X.str1['N'][0], y: EndPointY - 83}),
-            ...this.bubble(duration, +delay + 700, {x: +COORDINATES_X.str1['N'][1], y: EndPointY - 7}),
+            ...this.bubble(duration, +delay + 700, {x: +PARAMS.COORDINATES_X.str1['N'][0], y: PARAMS.EndPointY - 83}),
+            ...this.bubble(duration, +delay + 700, {x: +PARAMS.COORDINATES_X.str1['N'][1], y: PARAMS.EndPointY - 7}),
             rightLineToLeft
         ]
     },
@@ -1051,14 +891,14 @@ var Bamboo = {
             return 'stagger(' + (0 + Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_e_1',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -1070,10 +910,10 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str1['E'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str1['E'], y: PARAMS.EndPointY - 45});
 
         const horLineTop = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1081,7 +921,7 @@ var Bamboo = {
             children: {
                 className:        'label_e_2',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           20,
                 strokeWidth:      6,
@@ -1090,7 +930,7 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '200%'}
             }
-        }).tune({x: +COORDINATES_X.str1['E'] + 15, y: EndPointY - 80})
+        }).tune({x: +PARAMS.COORDINATES_X.str1['E'] + 15, y: PARAMS.EndPointY - 80})
             .then({
                 children: {
                     radius: 25,
@@ -1098,7 +938,7 @@ var Bamboo = {
             });
 
         const horLineCenter = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1106,7 +946,7 @@ var Bamboo = {
             children: {
                 className:        'label_e_3',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           17,
                 strokeWidth:      6,
@@ -1117,16 +957,16 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str1['E'] + 15, y: EndPointY - 45})
+        }).tune({x: +PARAMS.COORDINATES_X.str1['E'] + 15, y: PARAMS.EndPointY - 45})
             .then({
-                x:        +COORDINATES_X.str1['E'] + 13,
+                x:        +PARAMS.COORDINATES_X.str1['E'] + 13,
                 children: {
                     radius: 24,
                 }
             });
 
         const horLineBottom = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1134,7 +974,7 @@ var Bamboo = {
             children: {
                 className:        'label_e_4',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           20,
                 strokeWidth:      6,
@@ -1145,7 +985,7 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str1['E'] + 15, y: EndPointY - 10})
+        }).tune({x: +PARAMS.COORDINATES_X.str1['E'] + 15, y: PARAMS.EndPointY - 10})
             .then({
                 children: {
                     radius: 25,
@@ -1154,9 +994,9 @@ var Bamboo = {
 
         return [
             leftLine,
-            ...this.bubble(duration, +delay + 600, {x: +COORDINATES_X.str1['E'], y: EndPointY - 80}),
-            ...this.bubble(duration, +delay + 200, {x: +COORDINATES_X.str1['E'], y: EndPointY - 45}),
-            ...this.bubble(duration, +delay + 100, {x: +COORDINATES_X.str1['E'], y: EndPointY - 10}),
+            ...this.bubble(duration, +delay + 600, {x: +PARAMS.COORDINATES_X.str1['E'], y: PARAMS.EndPointY - 80}),
+            ...this.bubble(duration, +delay + 200, {x: +PARAMS.COORDINATES_X.str1['E'], y: PARAMS.EndPointY - 45}),
+            ...this.bubble(duration, +delay + 100, {x: +PARAMS.COORDINATES_X.str1['E'], y: PARAMS.EndPointY - 10}),
             horLineTop,
             horLineBottom,
             horLineCenter,
@@ -1168,14 +1008,14 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const rootLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_o',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           9,
                 strokeWidth:      6,
@@ -1186,9 +1026,9 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str1['O'], y: EndPointY - 10});
+        }).tune({x: PARAMS.COORDINATES_X.str1['O'], y: PARAMS.EndPointY - 10});
         const rightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1196,7 +1036,7 @@ var Bamboo = {
             children: {
                 className:        'label_o_1',
                 shape:            'circle',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           40,
@@ -1207,9 +1047,9 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '150%'}
             }
-        }).tune({x: COORDINATES_X.str1['O'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str1['O'], y: PARAMS.EndPointY - 45});
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1218,7 +1058,7 @@ var Bamboo = {
             children: {
                 className:        'label_o_2',
                 shape:            'circle',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           40,
@@ -1228,9 +1068,9 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '50%'}
             }
-        }).tune({x: +COORDINATES_X.str1['O'], y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str1['O'], y: PARAMS.EndPointY - 45});
         const innerRightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1238,7 +1078,7 @@ var Bamboo = {
             children: {
                 className:        'label_o_1',
                 shape:            'circle',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           30,
@@ -1249,10 +1089,10 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '140%'}
             }
-        }).tune({x: COORDINATES_X.str1['O'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str1['O'], y: PARAMS.EndPointY - 45});
 
         const innerLeftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1261,7 +1101,7 @@ var Bamboo = {
             children: {
                 className:        'label_o_2',
                 shape:            'circle',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           30,
@@ -1271,15 +1111,15 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '60%'}
             }
-        }).tune({x: +COORDINATES_X.str1['O'], y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str1['O'], y: PARAMS.EndPointY - 45});
         return [
             rootLine,
             leftLine,
             rightLine,
             innerRightLine,
             innerLeftLine,
-            ...this.bubble(duration, +delay + 400, {x: +COORDINATES_X.str1['O'], y: EndPointY - 5}),
-            ...this.bubble(duration, +delay + 1000, {x: +COORDINATES_X.str1['O'], y: EndPointY - 15}),
+            ...this.bubble(duration, +delay + 400, {x: +PARAMS.COORDINATES_X.str1['O'], y: PARAMS.EndPointY - 5}),
+            ...this.bubble(duration, +delay + 1000, {x: +PARAMS.COORDINATES_X.str1['O'], y: PARAMS.EndPointY - 15}),
         ]
     },
 
@@ -1289,14 +1129,14 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const rootLine1 = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_s',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           20,
                 strokeWidth:      2,
@@ -1307,9 +1147,9 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str2['S'] - 30, y: EndPointY - 10});
+        }).tune({x: PARAMS.COORDINATES_X.str2['S'] - 30, y: PARAMS.EndPointY - 10});
         const rootLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1317,7 +1157,7 @@ var Bamboo = {
             children: {
                 className: 'label_s',
                 shape:     'line',
-                stroke:    COLORS,
+                stroke:    PARAMS.COLORS,
                 scale:     1,
 
                 strokeWidth:      2,
@@ -1328,9 +1168,9 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str2['S'], y: EndPointY, radius: 20,});
+        }).tune({x: PARAMS.COORDINATES_X.str2['S'], y: PARAMS.EndPointY, radius: 20,});
         const sLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1339,7 +1179,7 @@ var Bamboo = {
             children: {
                 className:        'label_s_1',
                 shape:            'S',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           40,
@@ -1350,9 +1190,9 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '200%'}
             }
-        }).tune({x: +COORDINATES_X.str2['S'] + 10, y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str2['S'] + 10, y: PARAMS.EndPointY - 45});
         const sLine2 = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1361,7 +1201,7 @@ var Bamboo = {
             children: {
                 className:        'label_s_1',
                 shape:            'S',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           40,
@@ -1372,7 +1212,7 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'150%': '200%'}
             }
-        }).tune({x: +COORDINATES_X.str2['S'] + 10, y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str2['S'] + 10, y: PARAMS.EndPointY - 45});
         return [
             rootLine1,
             rootLine,
@@ -1386,14 +1226,14 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_n_1',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -1405,16 +1245,16 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str2['T'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str2['T'], y: PARAMS.EndPointY - 45});
         const rightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_n_2',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -1426,9 +1266,9 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str2['T'], y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str2['T'], y: PARAMS.EndPointY - 45});
         const leftLineToRight = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1438,7 +1278,7 @@ var Bamboo = {
                 rx:               0,
                 ry:               0,
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           27,
                 strokeWidth:      6,
@@ -1449,9 +1289,9 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str2['T'] + 10, y: +EndPointY - 70});
+        }).tune({x: +PARAMS.COORDINATES_X.str2['T'] + 10, y: +PARAMS.EndPointY - 70});
         const rightLineToLeft = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1461,7 +1301,7 @@ var Bamboo = {
                 rx:               0,
                 ry:               0,
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           27,
                 strokeWidth:      6,
@@ -1472,14 +1312,14 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str2['T'] - 13, y: +EndPointY - 24});
+        }).tune({x: +PARAMS.COORDINATES_X.str2['T'] - 13, y: +PARAMS.EndPointY - 24});
 
         return [
             leftLine,
             rightLine,
             leftLineToRight,
-            ...this.bubble(duration, +delay + 700, {x: +COORDINATES_X.str2['T'], y: EndPointY - 83}),
-            ...this.bubble(duration, +delay + 700, {x: +COORDINATES_X.str2['T'], y: EndPointY - 7}),
+            ...this.bubble(duration, +delay + 700, {x: +PARAMS.COORDINATES_X.str2['T'], y: PARAMS.EndPointY - 83}),
+            ...this.bubble(duration, +delay + 700, {x: +PARAMS.COORDINATES_X.str2['T'], y: PARAMS.EndPointY - 7}),
             rightLineToLeft
         ]
     },
@@ -1489,14 +1329,14 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_n_1',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -1508,16 +1348,16 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str2['U'][0], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str2['U'][0], y: PARAMS.EndPointY - 45});
         const rightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_n_2',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -1529,12 +1369,12 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +COORDINATES_X.str2['U'][1], y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str2['U'][1], y: PARAMS.EndPointY - 45});
         return [
             leftLine,
             rightLine,
-            ...this.bubble(duration, +delay + 700, {x: +COORDINATES_X.str2['U'][0], y: EndPointY - 83}),
-            ...this.bubble(duration, +delay + 700, {x: +COORDINATES_X.str2['U'][1], y: EndPointY - 7}),
+            ...this.bubble(duration, +delay + 700, {x: +PARAMS.COORDINATES_X.str2['U'][0], y: PARAMS.EndPointY - 83}),
+            ...this.bubble(duration, +delay + 700, {x: +PARAMS.COORDINATES_X.str2['U'][1], y: PARAMS.EndPointY - 7}),
         ]
     },
     plant_D2: function (duration, delay) {
@@ -1543,15 +1383,15 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_d_1',
-                x:                COORDINATES_X.str2['D'],
+                x:                PARAMS.COORDINATES_X.str2['D'],
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -1563,13 +1403,13 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str2['D'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str2['D'], y: PARAMS.EndPointY - 45});
 
         const equal = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
-            x:        +COORDINATES_X.str2.D + 34,
+            x:        +PARAMS.COORDINATES_X.str2.D + 34,
             y:        3,
             degree:   0,
             children: {
@@ -1578,7 +1418,7 @@ var Bamboo = {
                 angle:            -90,
                 shape:            'elipceD',
                 fill:             'none',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radiusY:          32.5,
                 radiusX:          40,
@@ -1595,7 +1435,7 @@ var Bamboo = {
         $(equal.el.children).css('height', '180');
         return [
             leftLine,
-            ...this.bubble(duration, +delay + 600, {x: COORDINATES_X.str2['D'], y: EndPointY - 85}),
+            ...this.bubble(duration, +delay + 600, {x: PARAMS.COORDINATES_X.str2['D'], y: PARAMS.EndPointY - 85}),
             equal,
         ]
     },
@@ -1605,14 +1445,14 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_n_1',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           43,
                 radiusY:          250,
@@ -1624,11 +1464,11 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str2['I'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str2['I'], y: PARAMS.EndPointY - 45});
 
         return [
             leftLine,
-            ...this.bubble(duration, +delay + 700, {x: +COORDINATES_X.str2['I'], y: EndPointY - 83}),
+            ...this.bubble(duration, +delay + 700, {x: +PARAMS.COORDINATES_X.str2['I'], y: PARAMS.EndPointY - 83}),
         ]
     },
     plant_O2: function (duration, delay) {
@@ -1637,14 +1477,14 @@ var Bamboo = {
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
         const rootLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
                 className:        'label_o',
                 shape:            'line',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 scale:            1,
                 radius:           9,
                 strokeWidth:      6,
@@ -1655,9 +1495,9 @@ var Bamboo = {
                     '100%': '200%'
                 }
             }
-        }).tune({x: COORDINATES_X.str2['O'], y: EndPointY - 10});
+        }).tune({x: PARAMS.COORDINATES_X.str2['O'], y: PARAMS.EndPointY - 10});
         const rightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1665,7 +1505,7 @@ var Bamboo = {
             children: {
                 className:        'label_o_1',
                 shape:            'circle',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           40,
@@ -1676,9 +1516,9 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '150%'}
             }
-        }).tune({x: COORDINATES_X.str2['O'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str2['O'], y: PARAMS.EndPointY - 45});
         const leftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1687,7 +1527,7 @@ var Bamboo = {
             children: {
                 className:        'label_o_2',
                 shape:            'circle',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           40,
@@ -1697,9 +1537,9 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '50%'}
             }
-        }).tune({x: +COORDINATES_X.str2['O'], y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str2['O'], y: PARAMS.EndPointY - 45});
         const innerRightLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1707,7 +1547,7 @@ var Bamboo = {
             children: {
                 className:        'label_o_1',
                 shape:            'circle',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           30,
@@ -1718,10 +1558,10 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '140%'}
             }
-        }).tune({x: COORDINATES_X.str2['O'], y: EndPointY - 45});
+        }).tune({x: PARAMS.COORDINATES_X.str2['O'], y: PARAMS.EndPointY - 45});
 
         const innerLeftLine = new mojs.Burst({
-            parent:   parentTag,
+            parent:   PARAMS.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
@@ -1730,7 +1570,7 @@ var Bamboo = {
             children: {
                 className:        'label_o_2',
                 shape:            'circle',
-                stroke:           COLORS,
+                stroke:           PARAMS.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           30,
@@ -1740,15 +1580,15 @@ var Bamboo = {
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '60%'}
             }
-        }).tune({x: +COORDINATES_X.str2['O'], y: EndPointY - 45});
+        }).tune({x: +PARAMS.COORDINATES_X.str2['O'], y: PARAMS.EndPointY - 45});
         return [
             rootLine,
             leftLine,
             rightLine,
             innerRightLine,
             innerLeftLine,
-            ...this.bubble(duration, +delay + 400, {x: +COORDINATES_X.str2['O'], y: EndPointY - 5}),
-            ...this.bubble(duration, +delay + 1000, {x: +COORDINATES_X.str2['O'], y: EndPointY - 15}),
+            ...this.bubble(duration, +delay + 400, {x: +PARAMS.COORDINATES_X.str2['O'], y: PARAMS.EndPointY - 5}),
+            ...this.bubble(duration, +delay + 1000, {x: +PARAMS.COORDINATES_X.str2['O'], y: PARAMS.EndPointY - 15}),
         ]
     },
 
@@ -1788,7 +1628,7 @@ var Bamboo = {
 
 };
 var Stars = {
-    color:['#ECCAFD', '#B89AC9', '#FFEAD7', '#FDF47E', '#FDFD40'],
+    color:      ['#ECCAFD', '#B89AC9', '#FFEAD7', '#FDF47E', '#FDFD40'],
     star:       function (duration, delay, count) {
         count = (count ? count : 5);
         let arStars = [],
@@ -1797,17 +1637,17 @@ var Stars = {
         for (let i = 0; i <= count; i++) {
             let color = this.color;
             let star = new mojs.Shape({
-                parent:       parentTag,
-                className:    'star',
-                x:            'rand(-550, 550)',
-                y:            'rand(-130, -45)',
-                stroke:       '#fdee88',
-                fill:         '#fdee88',
-                delay:        delay,
-                radius:       'rand(0.2, 2)',
-                opacity:      'rand(0.1, 1)',
-                strokeWidth:  0.1,
-                duration:     duration,
+                parent:      PARAMS.parentTag,
+                className:   'star',
+                x:           'rand(-550, 550)',
+                y:           'rand(-130, -45)',
+                stroke:      '#fdee88',
+                fill:        '#fdee88',
+                delay:       delay,
+                radius:      'rand(0.2, 2)',
+                opacity:     'rand(0.1, 1)',
+                strokeWidth: 0.1,
+                duration:    duration,
             }).then({
                 easing:   'sin.in',
                 duration: +duration + 2400,
@@ -1829,8 +1669,8 @@ var Stars = {
             });
 
             let starRim = new mojs.Shape({
-                parent:        parentTag,
-                className:    'star_rim',
+                parent:        PARAMS.parentTag,
+                className:     'star_rim',
                 x:             (star._props.x).replace('px', ''),
                 y:             (star._props.y).replace('px', ''),
                 stroke:        randomArrayItem(color),
@@ -1884,12 +1724,12 @@ var Stars = {
             let color = this.color;
             rimStar.then({
                 className: 'star_rim_shine',
-                radius:   rimStar._props.radius * 3,
-                stroke:   randomArrayItem(color),
-                fill:     randomArrayItem(color),
-                delay:    delay - calculateParams,
-                duration: duration,
-                opacity:  rimStar._props.opacity * 8,
+                radius:    rimStar._props.radius * 3,
+                stroke:    randomArrayItem(color),
+                fill:      randomArrayItem(color),
+                delay:     delay - calculateParams,
+                duration:  duration,
+                opacity:   rimStar._props.opacity * 8,
             }).then({
                 duration: 400,
                 delay:    10,
@@ -1899,7 +1739,7 @@ var Stars = {
         }
     },
 
-    hideStars: function () {
+    hideStars:   function () {
         if (this.curentStars) {
             this.curentStars.forEach(function (obj) {
                 $(obj.el.children).animate({
@@ -1935,35 +1775,35 @@ var Stars = {
 var MoonRise = {
     moon:         function (duration, delay) {
         let moon = new mojs.Shape({
-            parent:    parentTag,
-            className: 'moon',
-            shape:     'moon',
-            stroke:    'none',
-            delay:     delay,
-            duration:  duration,
-            x:         {450: 300},
-            y:         {0: -80},
-            opacity:   {0: 1},
-            scale:     1,
-            radius:    75,
+            parent:         PARAMS.parentTag,
+            className:      'moon',
+            shape:          'moon',
+            stroke:         'none',
+            delay:          delay,
+            duration:       duration,
+            x:              {450: 300},
+            y:              {0: -80},
+            opacity:        {0: 1},
+            scale:          1,
+            radius:         75,
             isRefreshState: true,
             isShowEnd:      true
         });
 
         let moonArea = new mojs.Shape({
-            parent:        parentTag,
-            className:     'moon',
-            delay:         delay,
-            duration:      duration,
-            stroke:        '#dad9d0',
-            x:             400,
-            opacity:       0,
-            strokeOpacity: 0.2,
-            strokeWidth:   20,
-            y:             {[+EndPointY + 50]: EndPointY},
-            scale:         1,
-            fill:          '#dad9d0',
-            radius:        40,
+            parent:         PARAMS.parentTag,
+            className:      'moon',
+            delay:          delay,
+            duration:       duration,
+            stroke:         '#dad9d0',
+            x:              400,
+            opacity:        0,
+            strokeOpacity:  0.2,
+            strokeWidth:    20,
+            y:              {[+PARAMS.EndPointY + 50]: PARAMS.EndPointY},
+            scale:          1,
+            fill:           '#dad9d0',
+            radius:         40,
             isRefreshState: true,
             isShowEnd:      true
         });
@@ -1973,12 +1813,12 @@ var MoonRise = {
     },
     mountains:    function (duration, delay) {
         let mountains = new mojs.Shape({
-            parent:      parentTag,
+            parent:      PARAMS.parentTag,
             className:   'mountains',
             shape:       'mountains',
             x:           400,
             opacity:     {0: 1},
-            y:           {[+EndPointY + 50]: EndPointY},
+            y:           {[+PARAMS.EndPointY + 50]: PARAMS.EndPointY},
             scale:       1,
             radius:      169,
             stroke:      'none',
@@ -1995,14 +1835,14 @@ var MoonRise = {
     },
     horizonLine:  function (duration, delay) {
         const horizonLine = new mojs.Shape({
-            parent:           parentTag,
+            parent:           PARAMS.parentTag,
             className:        'horizontLine',
             shape:            'horizontLine',
             stroke:           '#adb9bd',
             fill:             'none',
             scale:            1,
             x:                -150,
-            y:                {[+EndPointY + 115]: +EndPointY + 65},
+            y:                {[+PARAMS.EndPointY + 115]: +PARAMS.EndPointY + 65},
             radius:           169,
             opacity:          0.3,
             radiusX:          438,
@@ -2051,9 +1891,9 @@ var timeOl = 0;
 timeline.add(
     ...Stars.getTimeLine(),
     ...MoonRise.getTimeLine(),
-    ...FirstRainbow.getTimeLine(),
+    ...TimeLineFR,
     ...Bamboo.getTimeLine(),
-    FirstRainbow.rainbow(200, 34077, 'A', 'str1'),
+    //FirstRainbow.rainbow(200, 34077, 'A', 'str1'),
 );
 //timeline.add(FirstRainbow.getTimeLine());
 
@@ -2126,7 +1966,7 @@ $('.stop').on('click', function () {
 
 addOverflow();
 /*const burstRainbowEnd = new mojs.Burst({
- ...defaultParams,
+ ...params,
  radius:   { 0: 300 },
  count:    10,
  repeat:   77,
