@@ -23,7 +23,7 @@ const PARAMS = {
         },
         str2: {
             'S': '86',
-            'T': '166',
+            'T': '165',
             'U': ['225', '273'],
             'D': '318',
             'I': '419',
@@ -214,7 +214,7 @@ timeline.add(
 var playerPanel = new MojsPlayer({
     add:         timeline,
     isPlaying:   false,
-    isSaveState: false,
+    isSaveState: true,
 });
 
 $(playerPanel.stopButton.el).click(function () {

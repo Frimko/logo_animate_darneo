@@ -382,7 +382,7 @@ class Letters {
                 rotate:           0,
                 strokeWidth:      6,
                 duration:         +duration + 1600,
-                delay:            delayModify(+duration),
+                delay:            delayModify(300),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '150%': '50%'
@@ -409,7 +409,7 @@ class Letters {
                 rotate:           0,
                 strokeWidth:      6,
                 duration:         +duration + 400,
-                delay:            delayModify(+duration),
+                delay:            delayModify(300),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '100%': '200%'
@@ -924,13 +924,13 @@ class Letters {
             additionalDelay = additionalDelay ? Number(additionalDelay) : 0;
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
-        const leftLine = new mojs.Burst({
+        const midleLine = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
             children: {
-                className:        'label_n_1',
+                className:        'label_t_1',
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
@@ -945,87 +945,45 @@ class Letters {
                 }
             }
         }).tune({x: this.params.COORDINATES_X.str2['T'], y: this.params.EndPointY - 45});
-        const rightLine = new mojs.Burst({
+        const topHorLine = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
+            angle:    90,
             children: {
-                className:        'label_n_2',
-                shape:            'line',
-                stroke:           this.params.COLORS,
-                scale:            1,
-                radius:           43,
-                radiusY:          250,
-                strokeWidth:      6,
-                duration:         duration,
-                delay:            delayModify(),
-                strokeDasharray:  '100%',
-                strokeDashoffset: {
-                    '100%': '200%'
-                }
-            }
-        }).tune({x: +this.params.COORDINATES_X.str2['T'], y: this.params.EndPointY - 45});
-        const leftLineToRight = new mojs.Burst({
-            parent:   this.params.parentTag,
-            count:    3,
-            radius:   2,
-            degree:   0,
-            angle:    140,
-            children: {
-                className:        'label_n_1_1',
+                className:        'label_t_2',
                 rx:               0,
                 ry:               0,
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
-                radius:           27,
+                radius:           0,
                 strokeWidth:      6,
-                duration:         +duration + 600,
-                delay:            delayModify(+duration),
+                delay:            delayModify(200),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +this.params.COORDINATES_X.str2['T'] + 10, y: +this.params.EndPointY - 70});
-        const rightLineToLeft = new mojs.Burst({
-            parent:   this.params.parentTag,
-            count:    3,
-            radius:   2,
-            degree:   0,
-            angle:    -38,
-            children: {
-                className:        'label_n_2_1',
-                rx:               0,
-                ry:               0,
-                shape:            'line',
-                stroke:           this.params.COLORS,
-                scale:            1,
-                radius:           27,
-                strokeWidth:      6,
+        }).tune({
+            x: +this.params.COORDINATES_X.str2['T']-3,
+            y: +this.params.EndPointY - 83,
+        }).then({
+            children:{
                 duration:         +duration + 600,
-                delay:            delayModify(+duration),
-                strokeDasharray:  '100%',
-                strokeDashoffset: {
-                    '100%': '200%'
-                }
+                radius:           29,
+                delay:            'stagger(0,125)',
             }
-        }).tune({x: +this.params.COORDINATES_X.str2['T'] - 13, y: +this.params.EndPointY - 24});
+        });
 
         return [
-            leftLine,
-            rightLine,
-            leftLineToRight,
+            midleLine,
+            topHorLine,
             ...this.bubble(duration, +delay + 700, {
                 x: +this.params.COORDINATES_X.str2['T'],
                 y: this.params.EndPointY - 83
             }),
-            ...this.bubble(duration, +delay + 700, {
-                x: +this.params.COORDINATES_X.str2['T'],
-                y: this.params.EndPointY - 7
-            }),
-            rightLineToLeft
         ]
     }
 
@@ -1101,7 +1059,7 @@ class Letters {
             radius:   2,
             degree:   0,
             children: {
-                className:        'label_d_1',
+                className:        'label_d2_1',
                 x:                this.params.COORDINATES_X.str2['D'],
                 shape:            'line',
                 stroke:           this.params.COLORS,
@@ -1126,7 +1084,7 @@ class Letters {
             y:        3,
             degree:   0,
             children: {
-                className:        'label_d_2',
+                className:        'label_d2_2',
                 origin:           '50% 100%',
                 angle:            -90,
                 shape:            'elipceD',
@@ -1169,7 +1127,7 @@ class Letters {
             radius:   2,
             degree:   0,
             children: {
-                className:        'label_n_1',
+                className:        'label_i_1',
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
@@ -1187,10 +1145,7 @@ class Letters {
 
         return [
             leftLine,
-            ...this.bubble(duration, +delay + 700, {
-                x: +this.params.COORDINATES_X.str2['I'],
-                y: this.params.EndPointY - 83
-            }),
+            //...this.bubble(duration, +delay + 700, { x: +this.params.COORDINATES_X.str2['I'], y: this.params.EndPointY - 83}),
         ]
     }
 
@@ -1205,7 +1160,7 @@ class Letters {
             radius:   2,
             degree:   0,
             children: {
-                className:        'label_o',
+                className:        'label_o2',
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
@@ -1226,7 +1181,7 @@ class Letters {
             degree:   0,
             fill:     'none',
             children: {
-                className:        'label_o_1',
+                className:        'label_o2_1',
                 shape:            'circle',
                 stroke:           this.params.COLORS,
                 fill:             'none',
@@ -1248,7 +1203,7 @@ class Letters {
             //angle:180,
             fill:     'none',
             children: {
-                className:        'label_o_2',
+                className:        'label_o2_2',
                 shape:            'circle',
                 stroke:           this.params.COLORS,
                 fill:             'none',
@@ -1268,7 +1223,7 @@ class Letters {
             degree:   0,
             fill:     'none',
             children: {
-                className:        'label_o_1',
+                className:        'label_o2_1',
                 shape:            'circle',
                 stroke:           this.params.COLORS,
                 fill:             'none',
@@ -1291,7 +1246,7 @@ class Letters {
             //angle:180,
             fill:     'none',
             children: {
-                className:        'label_o_2',
+                className:        'label_o2_2',
                 shape:            'circle',
                 stroke:           this.params.COLORS,
                 fill:             'none',
