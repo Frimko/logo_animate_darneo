@@ -216,7 +216,7 @@ class lilium extends mojs.CustomShape {
     }
 }
 
-export {elipceD, elipceR ,elipceR2, S, mountains, horizontLine, moon, lilium}
+export {elipceD, elipceR, elipceR2, S, mountains, horizontLine, moon, lilium}
 
 
 

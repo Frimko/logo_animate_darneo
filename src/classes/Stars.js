@@ -13,7 +13,8 @@ class Stars {
         this.color = data.PARAMS.STARS_COLOR;
         return data.timeLine(this);
     }
-    star (duration, delay, count) {
+
+    star(duration, delay, count) {
         count = (count ? count : 5);
         let arStars = [],
             arStarRim = [];
@@ -96,12 +97,13 @@ class Stars {
             ...arStars
         ];
     }
-    shineStars (duration, delay, arrStars, count) {
+
+    shineStars(duration, delay, arrStars, count) {
         let calculateParams = 21090;
         count = count ? Number(count) : 1;
         let curentStars = arrStars.filter(
             function (o) {
-                return o._o.className == "star_rim";
+                return (o._o.className === "star_rim");
             });
         for (let i = 0; i < count; i++) {
             let rimStar = sample(curentStars);
@@ -122,16 +124,17 @@ class Stars {
             });
         }
     }
-/*
-    hideStars () {
-        if (this.curentStars) {
-            this.curentStars.forEach(function (obj) {
-                $(obj.el.children).animate({
-                    opacity: 0
-                }, 800);
-            })
-        }
-    }*/
+
+    /*
+     hideStars () {
+     if (this.curentStars) {
+     this.curentStars.forEach(function (obj) {
+     $(obj.el.children).animate({
+     opacity: 0
+     }, 800);
+     })
+     }
+     }*/
 }
 
 export default Stars

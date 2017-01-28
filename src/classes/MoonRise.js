@@ -96,16 +96,17 @@ class MoonRise {
         horizonLine.el.style['z-index'] = 948;
         return horizonLine;
     }
-/*
-    hideMoonRise() {
-        if (this.curentMoonItems) {
-            this.curentMoonItems.forEach(function (obj) {
-                $(obj.el.children).animate({
-                    opacity: 0
-                }, 500);
-            })
-        }
-    }*/
+
+    /*
+     hideMoonRise() {
+     if (this.curentMoonItems) {
+     this.curentMoonItems.forEach(function (obj) {
+     $(obj.el.children).animate({
+     opacity: 0
+     }, 500);
+     })
+     }
+     }*/
 }
 
 export default MoonRise
