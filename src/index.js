@@ -3,11 +3,11 @@ import mojs from 'mo-js';
 import MojsPlayer from 'mojs-player';
 import {Howler, Howl} from 'howler';
 import FirstRainbow from './FirstRainbow';
+import Stars from './Stars';
 import MoonRise from './MoonRise';
 import {elipceD, elipceR ,elipceR2, S, mountains, horizontLine, moon, lilium} from './resorce.js';
 import './index.css';
 
-var sample = require('lodash/fp/sample');
 
 mojs.isDebug = true;
 const PARAMS = {
@@ -32,7 +32,8 @@ const PARAMS = {
     startPointY:   -100,
     EndPointY:     55,
     parentTag:     '#animate_logo',
-    COLORS:        ['#F9DD5E', '#FC2D79', '#11CDC5']
+    COLORS:        ['#F9DD5E', '#FC2D79', '#11CDC5'],
+    STARS_COLOR:['#ECCAFD', '#B89AC9', '#FFEAD7', '#FDF47E', '#FDFD40']
 };
 mojs.addShape('elipceR2', elipceR2);
 mojs.addShape('elipceD', elipceD);
@@ -111,6 +112,33 @@ let TimeLineMR = new MoonRise({
         return that.curentMoonItems;
     }
 });
+let TimeLineStars = new Stars({
+    PARAMS:PARAMS,
+    timeLine (o) {
+        let that = o;
+        that.curentStars = [
+            ...that.star(200, 17050, 5),
+            ...that.star(200, 17300, 15),
+            ...that.star(200, 17600, 25),
+            ...that.star(200, 17900, 30),
+            ...that.star(200, 18200, 35),
+        ];
+        that.shineStars(10, 21200, that.curentStars);
+        that.shineStars(10, 21600, that.curentStars);
+        that.shineStars(10, 21900, that.curentStars);
+
+        that.shineStars(10, 22100, that.curentStars);
+        that.shineStars(10, 22400, that.curentStars);
+        that.shineStars(10, 22700, that.curentStars);
+        that.shineStars(10, 22700, that.curentStars);
+
+        that.shineStars(10, 23300, that.curentStars, 20);
+        that.shineStars(10, 23900, that.curentStars, 15);
+        that.shineStars(10, 24500, that.curentStars, 5);
+
+        return that.curentStars;
+    }
+});
 var addOverflow = function () {
     if ($('.shadow').length == 0) {
         $('.logo').after($('.logo').clone().addClass('shadow'));
@@ -156,11 +184,6 @@ const timeline = new mojs.Timeline({
     }
 });
 
-//TODO заменить на лодаш
-function randomArrayItem(arr) {
-    var rand = Math.floor(Math.random() * arr.length);
-    return arr[rand];
-}
 var Bamboo = {
     bubble:   function (duration, delay, coords) {
         const CIRCLE_RADIUS = 15;
@@ -1429,164 +1452,9 @@ var Bamboo = {
     },
 
 };
-var Stars = {
-    color:      ['#ECCAFD', '#B89AC9', '#FFEAD7', '#FDF47E', '#FDFD40'],
-    star:       function (duration, delay, count) {
-        count = (count ? count : 5);
-        let arStars = [],
-            arStarRim = [];
-        let blurTime = 19690;
-        for (let i = 0; i <= count; i++) {
-            let color = this.color;
-            let star = new mojs.Shape({
-                parent:      PARAMS.parentTag,
-                className:   'star',
-                x:           'rand(-550, 550)',
-                y:           'rand(-130, -45)',
-                stroke:      '#fdee88',
-                fill:        '#fdee88',
-                delay:       delay,
-                radius:      'rand(0.2, 2)',
-                opacity:     'rand(0.1, 1)',
-                strokeWidth: 0.1,
-                duration:    duration,
-            }).then({
-                easing:   'sin.in',
-                duration: +duration + 2400,
-                stroke:   randomArrayItem(color),
-                fill:     randomArrayItem(color),
-                delay:    300,
-            }).then({
-                stroke: randomArrayItem(color),
-                fill:   randomArrayItem(color),
-                delay:  600,
-            }).then({
-                stroke: randomArrayItem(color),
-                fill:   randomArrayItem(color),
-                delay:  900,
-            }).then({
-                stroke: randomArrayItem(color),
-                fill:   randomArrayItem(color),
-                delay:  1200,
-            });
-
-            let starRim = new mojs.Shape({
-                parent:        PARAMS.parentTag,
-                className:     'star_rim',
-                x:             (star._props.x).replace('px', ''),
-                y:             (star._props.y).replace('px', ''),
-                stroke:        randomArrayItem(color),
-                fill:          'none',
-                radius:        star._props.radius / 2 + 0.7,
-                strokeOpacity: star._props.opacity - 0.1,
-                strokeWidth:   star._props.radius / 4,
-                duration:      +duration + 1300,
-                delay:         delay,
-            }).then({
-                stroke:        randomArrayItem(color),
-                fill:          randomArrayItem(color),
-                strokeOpacity: star._props.opacity * 3,
-                delay:         blurTime - delay - (+duration + 1300),
-                radius:        star._props.radius * 2,
-                duration:      10,
-                strokeWidth:   star._props.radius * 3,
-            }).then({
-                stroke:        randomArrayItem(color),
-                fill:          randomArrayItem(color),
-                delay:         0,
-                duration:      500,
-                strokeOpacity: star._props.opacity - 0.1,
-                opacity:       star._props.opacity,
-                radius:        star._props.radius + 0.7,
-                strokeWidth:   star._props.radius / 2,
-            }).then({
-                stroke: randomArrayItem(color),
-                fill:   randomArrayItem(color),
-                delay:  400,
-            });
-            star.el.style['z-index'] = 948;
-            starRim.el.style['z-index'] = 948;
-            arStarRim.push(starRim);
-            arStars.push(star);
-        }
-        return [
-            ...arStarRim,
-            ...arStars
-        ];
-    },
-    shineStars: function (duration, delay, arrStars, count) {
-        let calculateParams = 21090;
-        count = count ? Number(count) : 1;
-        let curentStars = arrStars.filter(
-            function (o) {
-                return o._o.className == "star_rim";
-            });
-        for (let i = 0; i < count; i++) {
-            let rimStar = sample(curentStars);
-            let color = this.color;
-            rimStar.then({
-                className: 'star_rim_shine',
-                radius:    rimStar._props.radius * 3,
-                stroke:    randomArrayItem(color),
-                fill:      randomArrayItem(color),
-                delay:     delay - calculateParams,
-                duration:  duration,
-                opacity:   rimStar._props.opacity * 8,
-            }).then({
-                duration: 400,
-                delay:    10,
-                radius:   rimStar._props.radius,
-                opacity:  rimStar._props.opacity,
-            });
-        }
-    },
-
-    hideStars:   function () {
-        if (this.curentStars) {
-            this.curentStars.forEach(function (obj) {
-                $(obj.el.children).animate({
-                    opacity: 0
-                }, 800);
-            })
-        }
-    },
-    getTimeLine: function () {
-        this.curentStars = [
-            ...this.star(200, 17050, 5),
-            ...this.star(200, 17300, 15),
-            ...this.star(200, 17600, 25),
-            ...this.star(200, 17900, 30),
-            ...this.star(200, 18200, 35),
-        ];
-        this.shineStars(10, 21200, this.curentStars);
-        this.shineStars(10, 21600, this.curentStars);
-        this.shineStars(10, 21900, this.curentStars);
-
-        this.shineStars(10, 22100, this.curentStars);
-        this.shineStars(10, 22400, this.curentStars);
-        this.shineStars(10, 22700, this.curentStars);
-        this.shineStars(10, 22700, this.curentStars);
-
-        this.shineStars(10, 23300, this.curentStars, 20);
-        this.shineStars(10, 23900, this.curentStars, 15);
-        this.shineStars(10, 24500, this.curentStars, 5);
-
-        return this.curentStars;
-    },
-};
-
-var timeOl = 0;
-/*var sound = new Howl({
- src:    [SONG],
- sprite: {
- str1: [0, 3200],
- str2: [3200, 5800],
- test: [timeOl, 30100]
- }
- });*/
 
 timeline.add(
-    ...Stars.getTimeLine(),
+    ...TimeLineStars,
     ...TimeLineMR,
     ...TimeLineFR,
     ...Bamboo.getTimeLine(),
