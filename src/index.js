@@ -3,36 +3,37 @@ import mojs from 'mo-js';
 import MojsPlayer from 'mojs-player';
 import {Howler, Howl} from 'howler';
 import FirstRainbow from './FirstRainbow';
+import MoonRise from './MoonRise';
 import {elipceD, elipceR ,elipceR2, S, mountains, horizontLine, moon, lilium} from './resorce.js';
 import './index.css';
 
 var sample = require('lodash/fp/sample');
 
 mojs.isDebug = true;
-const PARAMS = {};
-PARAMS.COORDINATES_X = {
-    str1: {
-        'D': '-530',
-        'A': '-414',
-        'R': ['-345', '-295'],
-        'N': ['-255', '-195'],
-        'E': '-155',
-        'O': '-50',
+const PARAMS = {
+    COORDINATES_X: {
+        str1: {
+            'D': '-530',
+            'A': '-414',
+            'R': ['-345', '-295'],
+            'N': ['-255', '-195'],
+            'E': '-155',
+            'O': '-50',
+        },
+        str2: {
+            'S': '86',
+            'T': '166',
+            'U': ['225', '273'],
+            'D': '318',
+            'I': '419',
+            'O': '501',
+        }
     },
-    str2: {
-        'S': '86',
-        'T': '166',
-        'U': ['225', '273'],
-        'D': '318',
-        'I': '419',
-        'O': '501',
-    }
+    startPointY:   -100,
+    EndPointY:     55,
+    parentTag:     '#animate_logo',
+    COLORS:        ['#F9DD5E', '#FC2D79', '#11CDC5']
 };
-PARAMS.startPointY = -100;
-PARAMS.EndPointY = 55;
-PARAMS.parentTag = '#animate_logo';
-
-PARAMS.COLORS = ['#F9DD5E', '#FC2D79', '#11CDC5'];
 mojs.addShape('elipceR2', elipceR2);
 mojs.addShape('elipceD', elipceD);
 mojs.addShape('elipceR', elipceR);
@@ -96,6 +97,18 @@ let TimeLineFR = new FirstRainbow({
             ...that.rainbow(200, 8400, 'R', 'str1', 0),
             ...that.rainbow(200, 8400, 'D', 'str2'),
         ]
+    }
+});
+let TimeLineMR = new MoonRise({
+    PARAMS:PARAMS,
+    timeLine(o) {
+        let that = o;
+        that.curentMoonItems = [
+            that.moon(5000, 20000),
+            that.mountains(1500, 18500),
+            that.horizonLine(1600, 18500),
+        ];
+        return that.curentMoonItems;
     }
 });
 var addOverflow = function () {
@@ -1561,111 +1574,6 @@ var Stars = {
         return this.curentStars;
     },
 };
-var MoonRise = {
-    moon:         function (duration, delay) {
-        let moon = new mojs.Shape({
-            parent:         PARAMS.parentTag,
-            className:      'moon',
-            shape:          'moon',
-            stroke:         'none',
-            delay:          delay,
-            duration:       duration,
-            x:              {450: 300},
-            y:              {0: -80},
-            opacity:        {0: 1},
-            scale:          1,
-            radius:         75,
-            isRefreshState: true,
-            isShowEnd:      true
-        });
-
-        let moonArea = new mojs.Shape({
-            parent:         PARAMS.parentTag,
-            className:      'moon',
-            delay:          delay,
-            duration:       duration,
-            stroke:         '#dad9d0',
-            x:              400,
-            opacity:        0,
-            strokeOpacity:  0.2,
-            strokeWidth:    20,
-            y:              {[+PARAMS.EndPointY + 50]: PARAMS.EndPointY},
-            scale:          1,
-            fill:           '#dad9d0',
-            radius:         40,
-            isRefreshState: true,
-            isShowEnd:      true
-        });
-        moon.el.style['z-index'] = 949;
-        moonArea.el.style['z-index'] = 949;
-        return moon;
-    },
-    mountains:    function (duration, delay) {
-        let mountains = new mojs.Shape({
-            parent:      PARAMS.parentTag,
-            className:   'mountains',
-            shape:       'mountains',
-            x:           400,
-            opacity:     {0: 1},
-            y:           {[+PARAMS.EndPointY + 50]: PARAMS.EndPointY},
-            scale:       1,
-            radius:      169,
-            stroke:      'none',
-            fill:        '#4c585c',
-            strokeWidth: 1,
-            delay:       delay,
-            duration:    duration,
-
-            isRefreshState: true,
-            isShowEnd:      true
-        });
-        mountains.el.style['z-index'] = 950;
-        return mountains;
-    },
-    horizonLine:  function (duration, delay) {
-        const horizonLine = new mojs.Shape({
-            parent:           PARAMS.parentTag,
-            className:        'horizontLine',
-            shape:            'horizontLine',
-            stroke:           '#adb9bd',
-            fill:             'none',
-            scale:            1,
-            x:                -150,
-            y:                {[+PARAMS.EndPointY + 115]: +PARAMS.EndPointY + 65},
-            radius:           169,
-            opacity:          0.3,
-            radiusX:          438,
-            strokeWidth:      6,
-            delay:            delay,
-            duration:         duration,
-            strokeDasharray:  '100%',
-            strokeDashoffset: {'100%': '200%'},
-
-            isRefreshState: true,
-            isShowEnd:      true
-
-        });
-        horizonLine.el.style['z-index'] = 948;
-        return horizonLine;
-    },
-    hideMoonRise: function () {
-        if (this.curentMoonItems) {
-            this.curentMoonItems.forEach(function (obj) {
-                $(obj.el.children).animate({
-                    opacity: 0
-                }, 500);
-            })
-        }
-    },
-    getTimeLine:  function () {
-        this.curentMoonItems = [
-            this.moon(5000, 20000),
-            this.mountains(1500, 18500),
-            this.horizonLine(1600, 18500),
-        ];
-        return this.curentMoonItems;
-    },
-};
 
 var timeOl = 0;
 /*var sound = new Howl({
@@ -1679,7 +1587,7 @@ var timeOl = 0;
 
 timeline.add(
     ...Stars.getTimeLine(),
-    ...MoonRise.getTimeLine(),
+    ...TimeLineMR,
     ...TimeLineFR,
     ...Bamboo.getTimeLine(),
     //FirstRainbow.rainbow(200, 34077, 'A', 'str1'),
