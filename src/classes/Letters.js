@@ -223,7 +223,7 @@ class Letters {
         });
 
         for (let el of equal.el.children) {
-            el.style.height = 180;
+            el.style['height'] = '180px';
         }
         return [
             leftLine,
@@ -594,6 +594,9 @@ class Letters {
             radius:   2,
             degree:   0,
             angle:    90,
+            timeline: {
+                delay: 600
+            },
             children: {
                 className:        'label_e_2',
                 shape:            'line',
@@ -602,7 +605,7 @@ class Letters {
                 radius:           20,
                 strokeWidth:      6,
                 duration:         duration,
-                delay:            delayModify(+duration + 600),
+                delay:            delayModify(),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {'100%': '200%'}
             }
@@ -619,6 +622,9 @@ class Letters {
             radius:   2,
             degree:   0,
             angle:    90,
+            timeline: {
+                delay: 200
+            },
             children: {
                 className:        'label_e_3',
                 shape:            'line',
@@ -627,7 +633,7 @@ class Letters {
                 radius:           17,
                 strokeWidth:      6,
                 duration:         duration,
-                delay:            delayModify(+duration + 200),
+                delay:            delayModify(100),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '100%': '200%'
@@ -655,7 +661,7 @@ class Letters {
                 radius:           20,
                 strokeWidth:      6,
                 duration:         duration,
-                delay:            delayModify(+duration),
+                delay:            delayModify(),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '100%': '200%'
@@ -678,7 +684,7 @@ class Letters {
                 x: +this.params.COORDINATES_X.str1['E'],
                 y: this.params.EndPointY - 45
             }),
-            ...this.bubble(duration, +delay + 100, {
+            ...this.bubble(duration, +delay, {
                 x: +this.params.COORDINATES_X.str1['E'],
                 y: this.params.EndPointY - 10
             }),
@@ -1140,7 +1146,7 @@ class Letters {
             }
         });
         for (let el of equal.el.children) {
-            el.style.height = 180;
+            el.style['height'] = '180px';
         }
         return [
             leftLine,

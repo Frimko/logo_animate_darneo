@@ -36,6 +36,7 @@ const PARAMS = {
     COLORS:        ['#F9DD5E', '#FC2D79', '#11CDC5'],
     STARS_COLOR:   ['#ECCAFD', '#B89AC9', '#FFEAD7', '#FDF47E', '#FDFD40']
 };
+
 mojs.addShape('elipceR2', elipceR2);
 mojs.addShape('elipceD', elipceD);
 mojs.addShape('elipceR', elipceR);
