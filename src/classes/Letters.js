@@ -972,7 +972,16 @@ class Letters {
                     '100%': '200%'
                 }
             }
-        }).tune({x: this.params.COORDINATES_X.str2['U'][0], y: this.params.EndPointY - 45});
+        }).tune({
+            x: this.params.COORDINATES_X.str2['U'][0],
+            y: this.params.EndPointY - 45
+        }).then({
+            y: this.params.EndPointY - 60,
+            children:{
+                delay: 0,
+                radius:           28,
+            }
+        });
         const rightLine = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
@@ -993,7 +1002,16 @@ class Letters {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +this.params.COORDINATES_X.str2['U'][1], y: this.params.EndPointY - 45});
+        }).tune({
+            x: +this.params.COORDINATES_X.str2['U'][1],
+            y: this.params.EndPointY - 45
+        }).then({
+            y: this.params.EndPointY - 60,
+            children:{
+                delay: 0,
+                radius:           28,
+            }
+        });
         const leftLineU = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
@@ -1005,17 +1023,17 @@ class Letters {
                 shape:            'U1',
                 stroke:           this.params.COLORS,
                 scale:            1,
-                radius:           43,
+                radius:           40,
                 fill:             'none',
                 strokeWidth:      6,
                 duration:         duration,
-                delay:            delayModify(),
+                delay:            delayModify(+duration+500),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +this.params.COORDINATES_X.str2['U'][0], y: this.params.EndPointY - 20});
+        }).tune({x: +this.params.COORDINATES_X.str2['U'][0]+42, y: this.params.EndPointY - 45});
         const rightLineU = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
@@ -1027,29 +1045,29 @@ class Letters {
                 shape:            'U2',
                 stroke:           this.params.COLORS,
                 scale:            1,
-                radius:           43,
+                radius:           40,
                 fill:             'none',
                 strokeWidth:      6,
                 duration:         duration,
-                delay:            delayModify(),
+                delay:            delayModify(+duration+500),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +this.params.COORDINATES_X.str2['U'][1]-30, y: this.params.EndPointY - 20});
+        }).tune({x: +this.params.COORDINATES_X.str2['U'][1]-42, y: this.params.EndPointY - 45});
         return [
-            leftLine,
-            rightLine,
             leftLineU,
             rightLineU,
+            leftLine,
+            rightLine,
             ...this.bubble(duration, +delay + 700, {
                 x: +this.params.COORDINATES_X.str2['U'][0],
-                y: this.params.EndPointY - 7
+                y: this.params.EndPointY - 87
             }),
             ...this.bubble(duration, +delay + 700, {
                 x: +this.params.COORDINATES_X.str2['U'][1],
-                y: this.params.EndPointY - 7
+                y: this.params.EndPointY - 87
             }),
         ]
     }

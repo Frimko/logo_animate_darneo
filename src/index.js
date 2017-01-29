@@ -4,13 +4,14 @@ import MojsPlayer from 'mojs-player';
 import {Howler, Howl} from 'howler';
 import FirstRainbow from './classes/FirstRainbow';
 import Stars from './classes/Stars';
+
 import MoonRise from './classes/MoonRise';
 import Letters from './classes/Letters';
 import {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon} from './resorce.js';
 import './index.css';
+import './range.css';
 
-
-mojs.isDebug = true;
+//34014
 const PARAMS = {
     COORDINATES_X: {
         str1: {
@@ -24,7 +25,7 @@ const PARAMS = {
         str2: {
             'S': '86',
             'T': '165',
-            'U': ['225', '271'],
+            'U': ['221', '275'],
             'D': '318',
             'I': '419',
             'O': '501',
@@ -34,7 +35,8 @@ const PARAMS = {
     EndPointY:     55,
     parentTag:     '#animate_logo',
     COLORS:        ['#F9DD5E', '#FC2D79', '#11CDC5'],
-    STARS_COLOR:   ['#ECCAFD', '#B89AC9', '#FFEAD7', '#FDF47E', '#FDFD40']
+    STARS_COLOR:   ['#ECCAFD', '#B89AC9', '#FFEAD7', '#FDF47E', '#FDFD40'],
+    endTimeSong: 34014
 };
 
 mojs.addShape('elipceR2', elipceR2);
@@ -169,15 +171,20 @@ let TimeLineLetters = new Letters({
 
     },
 });
-
+var slider;
 var addOverflow = function () {
-    if ($('.shadow').length == 0) {
-        $('.logo').after($('.logo').clone().addClass('shadow'));
+    if ($('.shadow').length === 0) {
+        let range = '<div id="controls__timeline"><input type="range" step="1" min="1000" max="34014" value="1000" id="js-slider"></div>';
+        $('.logo').after($('.logo').clone().addClass('shadow').html(range));
         $('.logo').after($('<div>').addClass('overflow_logo'));
         $('.shadow, .overflow_logo').animate({
             opacity: .9
         }, 700);
     }
+    slider = document.querySelector('#js-slider');
+    slider.addEventListener('input', function(e) {
+        return timeline.setProgress((e.target.valueAsNumber)/34014);
+    });
 };
 var removeOverflow = function () {
     $('.shadow , .overflow_logo').animate({
@@ -192,19 +199,23 @@ var sound = new Howl({
 });
 const timeline = new mojs.Timeline({
     delay:      1000,
-    onStart:    function () {
+    onStart () {
         console.log('start timeline');
         //sound.stop();
     },
-    onComplete: function () {
+    onComplete () {
         console.log('end timeline');
         //Bamboo.hidePlants();
         //Stars.hideStars();
         //MoonRise.hideMoonRise();
         //removeOverflow();
+    },
+    onProgress(p){
+        p *=  100;
+        console.log((p*34014)/100);
+        $('#js-slider').val((p*34014)/100);
     }
 });
-
 
 timeline.add(
     ...TimeLineStars,
@@ -216,7 +227,7 @@ timeline.add(
 var playerPanel = new MojsPlayer({
     add:         timeline,
     isPlaying:   false,
-    isSaveState: true,
+    isSaveState: false,
 });
 
 $(playerPanel.stopButton.el).click(function () {
@@ -234,7 +245,7 @@ $('.play').on('click', function () {
 
     addOverflow();
     time = Number(time);
-    //17000
+        //17000
     console.log(time);
     if (time > 0) {
         sound = new Howl({
@@ -266,5 +277,5 @@ $('.stop').on('click', function () {
 //timeline.reset();
 });
 
-//addOverflow();
+addOverflow();
 
