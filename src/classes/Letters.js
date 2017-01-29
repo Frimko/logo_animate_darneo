@@ -826,47 +826,6 @@ class Letters {
             additionalDelay = additionalDelay ? Number(additionalDelay) : 0;
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
-        const rootLine1 = new mojs.Burst({
-            parent:   this.params.parentTag,
-            count:    3,
-            radius:   2,
-            degree:   0,
-            children: {
-                className:        'label_s',
-                shape:            'line',
-                stroke:           this.params.COLORS,
-                scale:            1,
-                radius:           20,
-                strokeWidth:      2,
-                duration:         +duration + 100,
-                delay:            delayModify(),
-                strokeDasharray:  '100%',
-                strokeDashoffset: {
-                    '100%': '200%'
-                }
-            }
-        }).tune({x: this.params.COORDINATES_X.str2['S'] - 30, y: this.params.EndPointY - 10});
-        const rootLine = new mojs.Burst({
-            parent:   this.params.parentTag,
-            count:    3,
-            radius:   2,
-            degree:   0,
-            angle:    -90,
-            children: {
-                className: 'label_s',
-                shape:     'line',
-                stroke:    this.params.COLORS,
-                scale:     1,
-
-                strokeWidth:      2,
-                duration:         +duration + 100,
-                delay:            delayModify(),
-                strokeDasharray:  '100%',
-                strokeDashoffset: {
-                    '100%': '200%'
-                }
-            }
-        }).tune({x: this.params.COORDINATES_X.str2['S'], y: this.params.EndPointY, radius: 20,});
         const sLine = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
@@ -882,7 +841,7 @@ class Letters {
                 scale:            1,
                 radius:           40,
                 //radiusY:          250,
-                strokeWidth:      2,
+                strokeWidth:      6,
                 duration:         +duration + 600,
                 delay:            delayModify(600),
                 strokeDasharray:  '100%',
@@ -898,24 +857,25 @@ class Letters {
             fill:     'none',
             children: {
                 className:        'label_s_1',
-                shape:            'S',
+                shape:            'S2',
                 stroke:           this.params.COLORS,
                 fill:             'none',
                 scale:            1,
                 radius:           40,
-                //radiusY:          250,
-                strokeWidth:      2,
+                strokeWidth:      6,
                 duration:         +duration + 600,
-                delay:            delayModify(600),
+                delay:            delayModify(400),
                 strokeDasharray:  '100%',
-                strokeDashoffset: {'150%': '200%'}
+                strokeDashoffset: {'150%': '50%'}
             }
         }).tune({x: +this.params.COORDINATES_X.str2['S'] + 10, y: this.params.EndPointY - 45});
         return [
-            rootLine1,
-            rootLine,
             sLine,
             sLine2,
+            ...this.bubble(duration, +delay + 700, {
+                x: +this.params.COORDINATES_X.str2['S'] - 3,
+                y: this.params.EndPointY - 7
+            }),
         ]
     }
 
@@ -967,13 +927,13 @@ class Letters {
                 }
             }
         }).tune({
-            x: +this.params.COORDINATES_X.str2['T']-3,
+            x: +this.params.COORDINATES_X.str2['T'] - 3,
             y: +this.params.EndPointY - 83,
         }).then({
-            children:{
-                duration:         +duration + 600,
-                radius:           29,
-                delay:            'stagger(0,125)',
+            children: {
+                duration: +duration + 600,
+                radius:   29,
+                delay:    'stagger(0,125)',
             }
         });
 
@@ -998,7 +958,7 @@ class Letters {
             radius:   2,
             degree:   0,
             children: {
-                className:        'label_n_1',
+                className:        'label_u_1',
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
@@ -1019,7 +979,7 @@ class Letters {
             radius:   2,
             degree:   0,
             children: {
-                className:        'label_n_2',
+                className:        'label_u_2',
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
@@ -1034,12 +994,58 @@ class Letters {
                 }
             }
         }).tune({x: +this.params.COORDINATES_X.str2['U'][1], y: this.params.EndPointY - 45});
+        const leftLineU = new mojs.Burst({
+            parent:   this.params.parentTag,
+            count:    3,
+            radius:   2,
+            degree:   0,
+            angle:-90,
+            children: {
+                className:        'label_u_3',
+                shape:            'U1',
+                stroke:           this.params.COLORS,
+                scale:            1,
+                radius:           43,
+                fill:             'none',
+                strokeWidth:      6,
+                duration:         duration,
+                delay:            delayModify(),
+                strokeDasharray:  '100%',
+                strokeDashoffset: {
+                    '100%': '200%'
+                }
+            }
+        }).tune({x: +this.params.COORDINATES_X.str2['U'][0], y: this.params.EndPointY - 20});
+        const rightLineU = new mojs.Burst({
+            parent:   this.params.parentTag,
+            count:    3,
+            radius:   2,
+            degree:   0,
+            angle:90,
+            children: {
+                className:        'label_u_4',
+                shape:            'U2',
+                stroke:           this.params.COLORS,
+                scale:            1,
+                radius:           43,
+                fill:             'none',
+                strokeWidth:      6,
+                duration:         duration,
+                delay:            delayModify(),
+                strokeDasharray:  '100%',
+                strokeDashoffset: {
+                    '100%': '200%'
+                }
+            }
+        }).tune({x: +this.params.COORDINATES_X.str2['U'][1]-30, y: this.params.EndPointY - 20});
         return [
             leftLine,
             rightLine,
+            leftLineU,
+            rightLineU,
             ...this.bubble(duration, +delay + 700, {
                 x: +this.params.COORDINATES_X.str2['U'][0],
-                y: this.params.EndPointY - 83
+                y: this.params.EndPointY - 7
             }),
             ...this.bubble(duration, +delay + 700, {
                 x: +this.params.COORDINATES_X.str2['U'][1],
@@ -1121,7 +1127,7 @@ class Letters {
             additionalDelay = additionalDelay ? Number(additionalDelay) : 0;
             return 'stagger(' + (Number(delay) + additionalDelay) + ',125)';
         };
-        const leftLine = new mojs.Burst({
+        const middleLine = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
             radius:   2,
@@ -1142,9 +1148,8 @@ class Letters {
                 }
             }
         }).tune({x: this.params.COORDINATES_X.str2['I'], y: this.params.EndPointY - 45});
-
         return [
-            leftLine,
+            middleLine,
             //...this.bubble(duration, +delay + 700, { x: +this.params.COORDINATES_X.str2['I'], y: this.params.EndPointY - 83}),
         ]
     }

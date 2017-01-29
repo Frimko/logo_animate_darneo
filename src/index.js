@@ -6,7 +6,7 @@ import FirstRainbow from './classes/FirstRainbow';
 import Stars from './classes/Stars';
 import MoonRise from './classes/MoonRise';
 import Letters from './classes/Letters';
-import {elipceD, elipceR, elipceR2, S, mountains, horizontLine, moon, lilium} from './resorce.js';
+import {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon} from './resorce.js';
 import './index.css';
 
 
@@ -24,7 +24,7 @@ const PARAMS = {
         str2: {
             'S': '86',
             'T': '165',
-            'U': ['225', '273'],
+            'U': ['225', '271'],
             'D': '318',
             'I': '419',
             'O': '501',
@@ -40,11 +40,13 @@ const PARAMS = {
 mojs.addShape('elipceR2', elipceR2);
 mojs.addShape('elipceD', elipceD);
 mojs.addShape('elipceR', elipceR);
+mojs.addShape('U1', U1);
+mojs.addShape('U2', U2);
 mojs.addShape('S', S);
+mojs.addShape('S2', S2);
 mojs.addShape('mountains', mountains);
 mojs.addShape('horizontLine', horizontLine);
 mojs.addShape('moon', moon);
-mojs.addShape('lilium', lilium);
 
 let TimeLineFR = new FirstRainbow({
     PARAMS:                     PARAMS,
@@ -264,5 +266,5 @@ $('.stop').on('click', function () {
 //timeline.reset();
 });
 
-addOverflow();
+//addOverflow();
 
