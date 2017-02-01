@@ -125,16 +125,20 @@ class Stars {
         }
     }
 
-    /*
-     hideStars () {
-     if (this.curentStars) {
-     this.curentStars.forEach(function (obj) {
-     $(obj.el.children).animate({
-     opacity: 0
-     }, 800);
-     })
-     }
-     }*/
+    lastStep(mojsObj, duration, delay, obj) {
+        let time = mojsObj.timeline._props.time;
+        obj.duration = duration;
+        obj.delay = delay - time;
+        return obj
+    }
+
+    hideStars(duration, delay) {
+        if (this.curentStars) {
+            this.curentStars.forEach(function (obj) {
+                this.lastStep(obj, duration, delay, {opacity: 0})
+            })
+        }
+    }
 }
 
 export default Stars

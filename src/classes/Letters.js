@@ -352,7 +352,7 @@ class Letters {
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
-                radius:           43,
+                radius:           44,
                 radiusY:          250,
                 strokeWidth:      6,
                 duration:         duration,
@@ -362,7 +362,7 @@ class Letters {
                     '100%': '200%'
                 }
             }
-        }).tune({x: this.params.COORDINATES_X.str1['R'][0], y: this.params.EndPointY - 45});
+        }).tune({x: this.params.COORDINATES_X.str1['R'][0], y: this.params.EndPointY - 44});
         const equal = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
@@ -437,7 +437,7 @@ class Letters {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +this.params.COORDINATES_X.str1['R'][0] + 40, y: this.params.EndPointY - 19});
+        }).tune({x: +this.params.COORDINATES_X.str1['R'][0] + 40, y: this.params.EndPointY - 18.5});
 
         return [
             leftLine,
@@ -511,7 +511,7 @@ class Letters {
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
-                radius:           27,
+                radius:           28,
                 strokeWidth:      6,
                 duration:         +duration + 600,
                 delay:            delayModify(+duration),
@@ -534,7 +534,7 @@ class Letters {
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
-                radius:           27,
+                radius:           28,
                 strokeWidth:      6,
                 duration:         +duration + 600,
                 delay:            delayModify(+duration),
