@@ -17,6 +17,7 @@ class Letters {
             return new mojs.Shape({
                 parent:      this.params.parentTag,
                 stroke:      {'#E5214A': '#37e3f5'},
+                className:   'bubble',
                 strokeWidth: {3: 0},
                 fill:        'none',
                 scale:       {0: 1},
@@ -34,6 +35,7 @@ class Letters {
             count:    10,
             timeline: {delay: +delay + 100},
             children: {
+                className:   'bubble_point',
                 radius:      1,
                 fill:        [
                     {'#9EC9F5': '#9ED8C6'},
@@ -66,35 +68,6 @@ class Letters {
             circle().tune(coords),
             circle(400).tune(coords),
             circle(800).tune(coords),
-        ];
-    }
-
-    lilium(duration, delay, coords) {
-        const leftLine = new mojs.Burst({
-            parent:   this.params.parentTag,
-            count:    3,
-            radius:   2,
-            degree:   0,
-            timeline: {
-                delay: +delay + 100
-            },
-            children: {
-                className:        'lilium',
-                shape:            'lilium',
-                stroke:           this.params.COLORS,
-                scale:            1,
-                //fill:             '#E0B6F5',
-                radius:           100,
-                strokeWidth:      1,
-                duration:         [+duration + 400, 700],
-                strokeDasharray:  '20%',
-                strokeDashoffset: {
-                    '100%': '150%'
-                }
-            }
-        });
-        return [
-            leftLine.tune(coords),
         ];
     }
 
@@ -247,6 +220,7 @@ class Letters {
             degree:   0,
             angle:    0,
             children: {
+                className:        'label_a_1',
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
@@ -276,6 +250,7 @@ class Letters {
             degree:   0,
             angle:    0,
             children: {
+                className:        'label_a_2',
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
@@ -307,6 +282,7 @@ class Letters {
             x:        this.params.COORDINATES_X.str1['A'],
             y:        this.params.EndPointY - 20,
             children: {
+                className:        'label_a_3',
                 shape:            'line',
                 stroke:           this.params.COLORS,
                 scale:            1,
@@ -976,10 +952,10 @@ class Letters {
             x: this.params.COORDINATES_X.str2['U'][0],
             y: this.params.EndPointY - 45
         }).then({
-            y: this.params.EndPointY - 60,
-            children:{
-                delay: 0,
-                radius:           28,
+            y:        this.params.EndPointY - 60,
+            children: {
+                delay:  0,
+                radius: 28,
             }
         });
         const rightLine = new mojs.Burst({
@@ -1006,10 +982,10 @@ class Letters {
             x: +this.params.COORDINATES_X.str2['U'][1],
             y: this.params.EndPointY - 45
         }).then({
-            y: this.params.EndPointY - 60,
-            children:{
-                delay: 0,
-                radius:           28,
+            y:        this.params.EndPointY - 60,
+            children: {
+                delay:  0,
+                radius: 28,
             }
         });
         const leftLineU = new mojs.Burst({
@@ -1017,7 +993,7 @@ class Letters {
             count:    3,
             radius:   2,
             degree:   0,
-            angle:-90,
+            angle:    -90,
             children: {
                 className:        'label_u_3',
                 shape:            'U1',
@@ -1027,19 +1003,19 @@ class Letters {
                 fill:             'none',
                 strokeWidth:      6,
                 duration:         duration,
-                delay:            delayModify(+duration+500),
+                delay:            delayModify(+duration + 500),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +this.params.COORDINATES_X.str2['U'][0]+42, y: this.params.EndPointY - 45});
+        }).tune({x: +this.params.COORDINATES_X.str2['U'][0] + 42, y: this.params.EndPointY - 45});
         const rightLineU = new mojs.Burst({
             parent:   this.params.parentTag,
             count:    3,
             radius:   2,
             degree:   0,
-            angle:90,
+            angle:    90,
             children: {
                 className:        'label_u_4',
                 shape:            'U2',
@@ -1049,13 +1025,13 @@ class Letters {
                 fill:             'none',
                 strokeWidth:      6,
                 duration:         duration,
-                delay:            delayModify(+duration+500),
+                delay:            delayModify(+duration + 500),
                 strokeDasharray:  '100%',
                 strokeDashoffset: {
                     '100%': '200%'
                 }
             }
-        }).tune({x: +this.params.COORDINATES_X.str2['U'][1]-42, y: this.params.EndPointY - 45});
+        }).tune({x: +this.params.COORDINATES_X.str2['U'][1] - 42, y: this.params.EndPointY - 45});
         return [
             leftLineU,
             rightLineU,
@@ -1299,15 +1275,23 @@ class Letters {
         ]
     }
 
-    /*    hidePlants () {
-     if (this.curentPlants) {
-     let curentPlants = this.curentPlants;
-     curentPlants.forEach(function (obj) {
-     $(obj.el.children).animate({
-     opacity: 0
-     }, 1000);
-     })
-     }
-     }*/
+    hideLetters(duration, delay) {
+        if (this.curentLetters) {
+            this.curentLetters.forEach(function (obj) {
+                let time = obj.timeline._props.time;
+                if (obj._o.children !== undefined && obj._o.children.className !== 'bubble_point') {
+                    console.log(obj);
+                    obj.then({
+                        children: {
+                            angle:            obj._o.children.angle,
+                            duration: duration,
+                            delay:    delay - time,
+                            opacity:  0
+                        }
+                    });
+                }
+            })
+        }
+    }
 }
 export default Letters

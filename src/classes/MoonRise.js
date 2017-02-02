@@ -49,20 +49,19 @@ class MoonRise {
 
     mountains(duration, delay) {
         let mountains = new mojs.Shape({
-            parent:      this.params.parentTag,
-            className:   'mountains',
-            shape:       'mountains',
-            x:           400,
-            opacity:     {0: 1},
-            y:           {[+this.params.EndPointY + 50]: this.params.EndPointY},
-            scale:       1,
-            radius:      169,
-            stroke:      'none',
-            fill:        '#4c585c',
-            strokeWidth: 1,
-            delay:       delay,
-            duration:    duration,
-
+            parent:         this.params.parentTag,
+            className:      'mountains',
+            shape:          'mountains',
+            x:              400,
+            opacity:        {0: 1},
+            y:              {[+this.params.EndPointY + 50]: this.params.EndPointY},
+            scale:          1,
+            radius:         169,
+            stroke:         'none',
+            fill:           '#4c585c',
+            strokeWidth:    1,
+            delay:          delay,
+            duration:       duration,
             isRefreshState: true,
             isShowEnd:      true
         });
@@ -97,16 +96,18 @@ class MoonRise {
         return horizonLine;
     }
 
-    /*
-     hideMoonRise() {
-     if (this.curentMoonItems) {
-     this.curentMoonItems.forEach(function (obj) {
-     $(obj.el.children).animate({
-     opacity: 0
-     }, 500);
-     })
-     }
-     }*/
+    hideMoonRise(duration, delay) {
+        if (this.curentMoonItems) {
+            this.curentMoonItems.forEach(function (obj) {
+                let time = obj.timeline._props.time;
+                return obj.then({
+                    duration: duration,
+                    delay:    delay - time,
+                    opacity:  0
+                });
+            })
+        }
+    }
 }
 
 export default MoonRise

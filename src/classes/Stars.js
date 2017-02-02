@@ -124,18 +124,15 @@ class Stars {
             });
         }
     }
-
-    lastStep(mojsObj, duration, delay, obj) {
-        let time = mojsObj.timeline._props.time;
-        obj.duration = duration;
-        obj.delay = delay - time;
-        return obj
-    }
-
     hideStars(duration, delay) {
         if (this.curentStars) {
             this.curentStars.forEach(function (obj) {
-                this.lastStep(obj, duration, delay, {opacity: 0})
+                let time = obj.timeline._props.time;
+                return obj.then({
+                    duration: duration,
+                    delay:    delay - time,
+                    opacity:  0
+                });
             })
         }
     }
