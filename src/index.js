@@ -5,9 +5,10 @@ import mojs from 'mo-js';
 import {Howl} from 'howler';
 import FirstRainbow from './classes/FirstRainbow';
 import Stars from './classes/Stars';
-import MojsPlayer from 'mojs-player';
+//import MojsPlayer from 'mojs-player';
 import MoonRise from './classes/MoonRise';
 import Letters from './classes/Letters';
+import PointsTimer from './classes/PointsTimer';
 import {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon} from './resorce.js';
 import './index.css';
 import './range.css';
@@ -43,29 +44,47 @@ const PARAMS = {
 class Animation {
     delay = 1000;
 
-    constructor() {
+    constructor(data) {
         this.sound();
         this.initResorce();
         this.timeLine();
+        this.addOverley(this.delay);
+        this.initPointsTimer(() => {
+            return this.removeOverflow()
+        });
+        this.soundSrc = data.soundSrc;
+    }
+
+    start() {
         return this.startAnimation();
     }
 
+    stopAnimation() {
+        this.sound.stop();
+        this.timeline.stop();
+        this.timeline.reset();
+    }
+
     startAnimation() {
-        this.addOverley(this.delay);
         setTimeout(() => {
             this.sound.play();
             this.timeline.play();
         }, +this.delay + 1000);
     }
 
-    restart(){
-        this.timeline.reset();
-        this.sound.play();
-        this.timeline.play();
+    restart() {
+        this.timelineTimer.stop();
+        this.timelineTimer.reset();
+        setTimeout(() => {
+            this.timeline.reset();
+            this.sound.play();
+            this.timeline.play();
+        }, +this.delay + 500);
     }
+
     sound() {
         this.sound = new Howl({
-            src: ['din-dong.mp3']
+            src: [this.soundSrc]
         });
         this.durationSound = PARAMS.endTimeSong;
     }
@@ -216,9 +235,10 @@ class Animation {
             onStart () {
                 console.log('start timeline');
             },
-            onComplete () {
-                console.log('end timeline');
+            onPlaybackComplete(){
+                console.log('end onPlaybackComplete');
                 that.showPanel();
+
             },
             onProgress(p){
                 p *= 100;
@@ -227,64 +247,118 @@ class Animation {
         }).add(...this.getTimeLineClasses());
 
         /*var playerPanel = new MojsPlayer({
-            add:         this.timeline,
-            isPlaying:   false,
-            isSaveState: true,
-        });*/
+         add:         this.timeline,
+         isPlaying:   false,
+         isSaveState: true,
+         });*/
     }
 
     hidePanel() {
-        $('.replay_button,#controls__timeline').animate({
+        $('.panel').animate({
             opacity: 0
         }, 200, function () {
             //$('#controls__timeline, .replay_button').hide();
         });
+        //this.timelineTimer.stop();
+        //this.timelineTimer.reset();
     }
 
-    addPanel($tag){
+    showPanel() {
+        let that = this;
+        $('.panel').animate({
+            opacity: 1
+        }, 200, function () {
+            that.timelineTimer.play();
+        });
+    }
+
+    addPanel($tag) {
         let duration = this.durationSound;
         let $range = $('<div id="controls__timeline">').append('<input type="range" step="1" min="0" max="' + duration + '" value="0" id="js-slider">');
         let $replayButton = $('<div class="replay_button" title="restart">').append(
-            '<svg fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="glass" x="0px" y="0px" viewBox="0 0 18 18" enable-background="new 0 0 18 18" xml:space="preserve">'+
-            '<path d="M5.03868442,0.355114828 C5.18894493,0.105224017 5.48268728,-0.0462129771 5.76249569,0.0127011539 C6.07958679,0.0633119511 6.33566986,0.367372131 6.34885061,0.703064059 C6.3544995,0.854105656 6.31684022,1.00672884 6.2403919,1.13483742 C6.01933195,1.49425316 5.79074015,1.84852874 5.56591427,2.2055721 C6.05774441,2.20636289 6.54957455,2.19805956 7.04102809,2.21506162 C9.1710367,2.28741925 11.2053908,3.45779393 12.5065187,5.21216977 C13.1512455,6.0749257 13.6238694,7.08476926 13.8483187,8.15748092 C14.1955372,9.7932377 13.9338053,11.5464273 13.1945537,13.0252116 C12.5558524,14.3055066 11.5661666,15.3968019 10.3610698,16.1006083 C9.29907824,16.7312663 8.06874971,17.0539101 6.8482126,16.9926236 C5.29175475,16.9309417 3.75789246,16.3097732 2.57426144,15.2441787 C1.61093718,14.3830044 0.892398202,13.2347719 0.482288694,11.9805731 C0.139212695,10.9481919 -0.00690529302,9.84938406 0.000249969294,8.75848414 C0.0119243447,8.50226698 0.16030189,8.2606795 0.377595908,8.14403743 C0.630666239,7.99932218 0.966586975,8.04360663 1.17634914,8.25118998 C1.34242654,8.40341777 1.41812169,8.6378881 1.41096642,8.86524129 C1.41849828,9.8181477 1.55105893,10.7777759 1.87266914,11.6721635 C2.24135345,12.7199652 2.88570365,13.6661499 3.73868623,14.3387199 C4.60974527,15.0318506 5.68190484,15.4351554 6.77138768,15.5063268 C7.76257981,15.5818476 8.76958883,15.339074 9.63801172,14.8345476 C11.0483516,14.0247748 12.0930199,12.5566663 12.4473937,10.9118154 C12.6654409,9.91818311 12.6323007,8.86168272 12.3193521,7.89414662 C11.6670935,5.84322314 9.9144308,4.23633033 7.89852979,3.80851094 C7.1287742,3.6376995 6.33830601,3.69859061 5.55762923,3.68910109 C5.78207851,4.03467794 6.0008789,4.38460415 6.22231544,4.73255338 C6.33679964,4.91048197 6.38123759,5.14099833 6.32437208,5.34937247 C6.25846835,5.62733646 6.0219681,5.8483633 5.75232769,5.88908918 C5.49360847,5.93732759 5.21831916,5.81277759 5.06881184,5.58740138 C4.61313461,4.87805943 4.16724879,4.16160033 3.71307793,3.45107219 C3.52591133,3.19287804 3.48712227,2.8208096 3.65809538,2.54245022 C4.1145258,1.81057064 4.58112422,1.08620361 5.03868442,0.355114828 L5.03868442,0.355114828 Z"></path>'+
+            '<svg><path d="M5.03868442,0.355114828 C5.18894493,0.105224017 5.48268728,-0.0462129771 5.76249569,' +
+            '0.0127011539 C6.07958679,0.0633119511 6.33566986,0.367372131 6.34885061,0.703064059 C6.3544995,' +
+            '0.854105656 6.31684022,1.00672884 6.2403919,1.13483742 C6.01933195,1.49425316 5.79074015,' +
+            '1.84852874 5.56591427,2.2055721 C6.05774441,2.20636289 6.54957455,2.19805956 7.04102809,' +
+            '2.21506162 C9.1710367,2.28741925 11.2053908,3.45779393 12.5065187,5.21216977 C13.1512455,' +
+            '6.0749257 13.6238694,7.08476926 13.8483187,8.15748092 C14.1955372,9.7932377 13.9338053,' +
+            '11.5464273 13.1945537,13.0252116 C12.5558524,14.3055066 11.5661666,15.3968019 10.3610698,' +
+            '16.1006083 C9.29907824,16.7312663 8.06874971,17.0539101 6.8482126,16.9926236 C5.29175475,' +
+            '16.9309417 3.75789246,16.3097732 2.57426144,15.2441787 C1.61093718,14.3830044 0.892398202,' +
+            '13.2347719 0.482288694,11.9805731 C0.139212695,10.9481919 -0.00690529302,9.84938406 0.000249969294,' +
+            '8.75848414 C0.0119243447,8.50226698 0.16030189,8.2606795 0.377595908,8.14403743 C0.630666239,' +
+            '7.99932218 0.966586975,8.04360663 1.17634914,8.25118998 C1.34242654,8.40341777 1.41812169,' +
+            '8.6378881 1.41096642,8.86524129 C1.41849828,9.8181477 1.55105893,10.7777759 1.87266914,' +
+            '11.6721635 C2.24135345,12.7199652 2.88570365,13.6661499 3.73868623,14.3387199 C4.60974527,' +
+            '15.0318506 5.68190484,15.4351554 6.77138768,15.5063268 C7.76257981,15.5818476 8.76958883,' +
+            '15.339074 9.63801172,14.8345476 C11.0483516,14.0247748 12.0930199,12.5566663 12.4473937,' +
+            '10.9118154 C12.6654409,9.91818311 12.6323007,8.86168272 12.3193521,7.89414662 C11.6670935,' +
+            '5.84322314 9.9144308,4.23633033 7.89852979,3.80851094 C7.1287742,3.6376995 6.33830601,' +
+            '3.69859061 5.55762923,3.68910109 C5.78207851,4.03467794 6.0008789,4.38460415 6.22231544,' +
+            '4.73255338 C6.33679964,4.91048197 6.38123759,5.14099833 6.32437208,5.34937247 C6.25846835,' +
+            '5.62733646 6.0219681,5.8483633 5.75232769,5.88908918 C5.49360847,5.93732759 5.21831916,' +
+            '5.81277759 5.06881184,5.58740138 C4.61313461,4.87805943 4.16724879,4.16160033 3.71307793,' +
+            '3.45107219 C3.52591133,3.19287804 3.48712227,2.8208096 3.65809538,2.54245022 C4.1145258,' +
+            '1.81057064 4.58112422,1.08620361 5.03868442,0.355114828 L5.03868442,0.355114828 Z"></path>' +
             '</svg>');
-        $tag.append($replayButton,$range);
-
-        $replayButton.on('click',()=>{
+        $tag.append($replayButton, $range);
+        $replayButton.on('click', () => {
             this.hidePanel();
             this.restart();
         });
-        $('#js-slider').on('input',(e)=>{
+        $('#js-slider').on('input', (e) => {
             this.timeline.setProgress((e.target.valueAsNumber) / duration);
         });
     }
-    showPanel(){
-        $('#controls__timeline, .replay_button').show();
-    }
+
     addOverley(delay) {
         delay = (delay ? delay : 700);
         let $logo = $('.logo');
-
-        if ($('.shadow').length === 0) {
-            let shadow = $('<div>').addClass('shadow');
-            $logo.after(shadow);
-            this.addPanel(shadow);
+        if ($('.panel').length === 0) {
+            let $shadow = $('<div>').addClass('panel');
+            $logo.after($shadow);
+            this.addPanel($shadow);
             $logo.after($('<div>').addClass('overflow_logo'));
-            $('.shadow, .overflow_logo').animate({
+            $('.panel, .overflow_logo').animate({
                 opacity: 1
             }, delay);
         }
     }
 
     removeOverflow() {
-        $('.shadow , .overflow_logo').animate({
+        this.stopAnimation();
+        $('.panel , .overflow_logo').animate({
             opacity: 0
         }, 700, function () {
             $(this).remove();
+        });
+        $('#animate_logo').animate({
+            opacity: 0
+        }, 700, function () {
+            $(this).html('');
         })
     };
-}
 
+    initPointsTimer(callBackEndTimeLine) {
+        let TimeLinePT = new PointsTimer({
+            PARAMS: PARAMS,
+            timeLine(o) {
+                return [
+                    ...o.bubble(2000, 1000, {x: 300, y: 200}),
+                    ...o.bubble(2000, 3000, {x: 400, y: 200}),
+                    ...o.bubble(2000, 5000, {x: 500, y: 200}),
+                ];
+            }
+        });
+        this.timelineTimer = new mojs.Timeline({
+            onPlaybackComplete () {
+                console.log('hide animation');
+                callBackEndTimeLine();
+            },
+        }).add(...TimeLinePT);
+        //window.timelineTimer = timelineTimer;
+    }
+}
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -348,7 +422,7 @@ window.animateLogo = () => {
      addOverflow();
      }else{
      }*/
-    return new Animation();
+    return new Animation({soundSrc: 'din-dong.mp3'});
 
 };
 //addOverflow();
@@ -388,5 +462,8 @@ var loaderAnimationLogo = {
          });*/
     }
 };
-loaderAnimationLogo.init();
-//window.animateLogo();
+//loaderAnimationLogo.init();
+let item = window.animateLogo();
+item.addOverley(1000);
+item.showPanel();
+window.timer = item.timelineTimer;

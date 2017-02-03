@@ -41,7 +41,7 @@ class U1 extends mojs.CustomShape {
 }
 class U2 extends mojs.CustomShape {
     getShape() {
-        return `<path d="M35,0,C16.8,0,0,11.7,0,33.9V100"/>`;
+        return `<path d="M35,0C16.8,0,0,11.7,0,33.9V100"/>`;
     }
 
     getLength() {

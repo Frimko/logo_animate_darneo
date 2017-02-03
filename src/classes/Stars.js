@@ -25,7 +25,7 @@ class Stars {
                 parent:      this.params.parentTag,
                 className:   'star',
                 x:           'rand(-550, 550)',
-                y:           'rand(-130, -45)',
+                y:           'rand(-130, -50)',
                 stroke:      '#fdee88',
                 fill:        '#fdee88',
                 delay:       delay,
