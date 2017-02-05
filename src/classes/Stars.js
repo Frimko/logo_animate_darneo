@@ -9,6 +9,7 @@ var baseRandom = require('lodash/_baseRandom');
 
 
 class Stars {
+    blurTime = 19690;
     constructor(data) {
         this.params = data.PARAMS;
         this.color = data.PARAMS.STARS_COLOR;
@@ -19,7 +20,7 @@ class Stars {
         count = (count ? count : 5);
         let arStars = [],
             arStarRim = [];
-        let blurTime = 19690;
+        let blurTime = this.blurTime;
         for (let i = 0; i <= count; i++) {
             let color = this.color;
             let star = new mojs.Shape({
@@ -30,7 +31,7 @@ class Stars {
                 stroke:      '#fdee88',
                 fill:        '#fdee88',
                 delay:       delay,
-                radius:      'rand(0.2, 2)',
+                radius:      'rand(0.2, 3)',
                 opacity:     'rand(0.1, 1)',
                 strokeWidth: 0.1,
                 duration:    duration,
@@ -83,10 +84,6 @@ class Stars {
                 opacity:       star._props.opacity,
                 radius:        star._props.radius + 0.7,
                 strokeWidth:   star._props.radius / 2,
-            }).then({
-                stroke: sample(color),
-                fill:   sample(color),
-                delay:  0,
             });
             star.el.style['z-index'] = 948;
             starRim.el.style['z-index'] = 948;
@@ -100,7 +97,7 @@ class Stars {
     }
 
     shineStars(duration, delay, arrStars, count) {
-        let calculateParams = 21090;
+        //let calculateParams = 21090;
         count = count ? Number(count) : 1;
         if (!this.curRimStar) {
             this.curRimStar = [];
@@ -119,7 +116,7 @@ class Stars {
                     radius:    rimStar._props.radius * 3,
                     stroke:    sample(color),
                     fill:      sample(color),
-                    delay:     delay - calculateParams,
+                    delay:     delay - rimStar.timeline._props.time,
                     duration:  duration,
                     opacity:   rimStar._props.opacity * 8,
                 }).then({
@@ -139,6 +136,10 @@ class Stars {
         let randArray = length ? array[randKey] : undefined;
         this.curRimStar.splice(randKey, 1);
         return randArray
+    }
+
+    shootingStar(){
+
     }
 
     hideStars(duration, delay) {
