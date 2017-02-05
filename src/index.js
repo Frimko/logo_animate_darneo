@@ -67,8 +67,8 @@ class Animation {
 
     startAnimation() {
         setTimeout(() => {
-            this.sound.play('stars');
-            this.timeline.play(17000);
+            this.sound.play(/*'stars'*/);
+            this.timeline.play(/*17000*/);
         }, +this.delay + 1000);
     }
 
@@ -86,10 +86,10 @@ class Animation {
         let that = this;
         this.sound = new Howl({
             src: [that.soundSrc],
-            sprite: {
+            /*sprite: {
                 start: [0, 34014],
                 stars: [17000, 34014],
-            }
+            }*/
         });
         this.durationSound = PARAMS.endTimeSong;
     }
@@ -232,6 +232,16 @@ class Animation {
                 that.shineStars(10, 26300, that.curentStars, 7);
                 that.shineStars(10, 26600, that.curentStars, 4);
                 that.shineStars(10, 27200, that.curentStars, 8);
+
+                that.shootingStar(500, 28100);
+                that.shootingStar(500, 28200);
+                that.shootingStar(500, 28300);
+                that.shootingStar(500, 29400);
+                that.shootingStar(500, 29510);
+                that.shootingStar(500, 29620);
+                that.shootingStar(500, 29730);
+                that.shootingStar(500, 29800);
+
                 that.hideStars(500, durationSound);
                 return that.curentStars;
             }
