@@ -45,6 +45,7 @@ class Animation {
     delay = 1000;
 
     constructor(data) {
+        this.soundSrc = data.soundSrc;
         this.sound();
         this.initResorce();
         this.timeLine();
@@ -52,7 +53,6 @@ class Animation {
         this.initPointsTimer(() => {
             return this.removeOverflow()
         });
-        this.soundSrc = data.soundSrc;
     }
 
     start() {
@@ -67,24 +67,26 @@ class Animation {
 
     startAnimation() {
         setTimeout(() => {
-            this.sound.play();
-            this.timeline.play();
+            this.sound.play(/*'start'*/);
+            this.timeline.play(/*17000*/);
         }, +this.delay + 1000);
     }
 
     restart() {
         this.timelineTimer.stop();
         this.timelineTimer.reset();
+        this.stopAnimation();
         setTimeout(() => {
-            this.timeline.reset();
             this.sound.play();
             this.timeline.play();
         }, +this.delay + 500);
     }
 
     sound() {
+        let that = this;
         this.sound = new Howl({
-            src: [this.soundSrc]
+            src: [that.soundSrc],
+
         });
         this.durationSound = PARAMS.endTimeSong;
     }
@@ -160,6 +162,32 @@ class Animation {
                 ]
             }
         });
+        let TimeLineLetters = new Letters({
+            PARAMS: PARAMS,
+            timeLine(o) {
+                let that = o;
+                that.curentLetters = [
+                    //...that.horLine(800, 10111),
+                    //...that.horLine2(800, 10111),
+                    ...that.plant_D(800, 10111),
+                    ...that.plant_A(800, 10200),
+                    ...that.plant_R(800, 10300),
+                    ...that.plant_N(800, 10400),
+                    ...that.plant_E(800, 10500),
+                    ...that.plant_O(800, 10600),
+
+                    ...that.plant_S(800, 12500),
+                    ...that.plant_T(800, 13100),
+                    ...that.plant_U(800, 13400),
+                    ...that.plant_D2(800, 13700),
+                    ...that.plant_I(800, 14000),
+                    ...that.plant_O2(800, 14300),
+                ];
+                //that.hideLetters(1000, +durationSound+300);
+                return that.curentLetters;
+
+            },
+        });
         let TimeLineMR = new MoonRise({
             PARAMS: PARAMS,
             timeLine(o) {
@@ -191,44 +219,22 @@ class Animation {
                 that.shineStars(10, 22100, that.curentStars);
                 that.shineStars(10, 22400, that.curentStars);
                 that.shineStars(10, 22700, that.curentStars);
-                that.shineStars(10, 22700, that.curentStars);
 
-                that.shineStars(10, 23300, that.curentStars, 20);
-                that.shineStars(10, 23900, that.curentStars, 15);
-                that.shineStars(10, 24500, that.curentStars, 5);
+                that.shineStars(10, 23200, that.curentStars, 2);
+                that.shineStars(10, 23800, that.curentStars, 3);
+                that.shineStars(10, 24400, that.curentStars, 4);
+
+                that.shineStars(10, 25050, that.curentStars, 5);
+                that.shineStars(10, 25600, that.curentStars, 1);
+                that.shineStars(10, 26200, that.curentStars, 5);
+                that.shineStars(10, 26500, that.curentStars, 4);
+                that.shineStars(10, 27100, that.curentStars, 2);
                 that.hideStars(500, durationSound);
                 return that.curentStars;
             }
         });
-        let TimeLineLetters = new Letters({
-            PARAMS: PARAMS,
-            timeLine(o) {
-                let that = o;
-                that.curentLetters = [
-                    //...that.horLine(800, 10111),
-                    //...that.horLine2(800, 10111),
-                    ...that.plant_D(800, 10111),
-                    ...that.plant_A(800, 10200),
-                    ...that.plant_R(800, 10300),
-                    ...that.plant_N(800, 10400),
-                    ...that.plant_E(800, 10500),
-                    ...that.plant_O(800, 10600),
-
-                    ...that.plant_S(800, 12500),
-                    ...that.plant_T(800, 13100),
-                    ...that.plant_U(800, 13400),
-                    ...that.plant_D2(800, 13700),
-                    ...that.plant_I(800, 14000),
-                    ...that.plant_O2(800, 14300),
-                ];
-                //that.hideLetters(1000, +durationSound+300);
-                return that.curentLetters;
-
-            },
-        });
-        return [...TimeLineFR, ...TimeLineMR, ...TimeLineStars, ...TimeLineLetters];
+        return [...TimeLineStars, ...TimeLineMR, ...TimeLineFR, ...TimeLineLetters];
     }
-
     timeLine() {
         let that = this;
         this.timeline = new mojs.Timeline({
@@ -308,6 +314,8 @@ class Animation {
         });
         $('#js-slider').on('input', (e) => {
             this.timeline.setProgress((e.target.valueAsNumber) / duration);
+            //this.timelineTimer.stop();
+            this.timelineTimer.reset();
         });
     }
 
@@ -319,7 +327,7 @@ class Animation {
             $logo.after($shadow);
             this.addPanel($shadow);
             $logo.after($('<div>').addClass('overflow_logo'));
-            $('.panel, .overflow_logo').animate({
+            $('.overflow_logo').animate({
                 opacity: 1
             }, delay);
         }
@@ -455,15 +463,16 @@ var loaderAnimationLogo = {
         });
     },
     loadScript:    function () {
-        window.animateLogo();
+        var anim = window.animateLogo();
+        anim.start();
         /*$.getScript(this.scriptPath, function() {
          //колбек, выдаст нам объект при оформлении в форме
          window.animateLogo();
          });*/
     }
 };
-//loaderAnimationLogo.init();
-let item = window.animateLogo();
+loaderAnimationLogo.init();
+/*let item = window.animateLogo();
 item.addOverley(1000);
-item.showPanel();
-window.timer = item.timelineTimer;
+item.showPanel();*/
+//window.timer = item.timelineTimer;

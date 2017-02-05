@@ -5,6 +5,7 @@
 import mojs from 'mo-js';
 
 var sample = require('lodash/fp/sample');
+var baseRandom = require('lodash/_baseRandom');
 
 
 class Stars {
@@ -42,15 +43,15 @@ class Stars {
             }).then({
                 stroke: sample(color),
                 fill:   sample(color),
-                delay:  600,
+                delay:  200,
             }).then({
                 stroke: sample(color),
                 fill:   sample(color),
-                delay:  900,
+                delay:  200,
             }).then({
                 stroke: sample(color),
                 fill:   sample(color),
-                delay:  1200,
+                delay:  200,
             });
 
             let starRim = new mojs.Shape({
@@ -85,7 +86,7 @@ class Stars {
             }).then({
                 stroke: sample(color),
                 fill:   sample(color),
-                delay:  400,
+                delay:  0,
             });
             star.el.style['z-index'] = 948;
             starRim.el.style['z-index'] = 948;
@@ -101,29 +102,45 @@ class Stars {
     shineStars(duration, delay, arrStars, count) {
         let calculateParams = 21090;
         count = count ? Number(count) : 1;
-        let curentStars = arrStars.filter(
-            function (o) {
-                return (o._o.className === "star_rim");
-            });
-        for (let i = 0; i < count; i++) {
-            let rimStar = sample(curentStars);
-            let color = this.color;
-            rimStar.then({
-                className: 'star_rim_shine',
-                radius:    rimStar._props.radius * 3,
-                stroke:    sample(color),
-                fill:      sample(color),
-                delay:     delay - calculateParams,
-                duration:  duration,
-                opacity:   rimStar._props.opacity * 8,
-            }).then({
-                duration: 400,
-                delay:    10,
-                radius:   rimStar._props.radius,
-                opacity:  rimStar._props.opacity,
+        if (!this.curRimStar) {
+            this.curRimStar = [];
+            arrStars.forEach((o)=>{
+                if(o._o.className === "star_rim"){
+                    this.curRimStar.push(o);
+                }
             });
         }
+        for (let i = 0; i < count; i++) {
+            let rimStar = this.randRimStarAndDel();
+            if(rimStar){
+                let color = this.color;
+                rimStar.then({
+                    className: 'star_rim_shine',
+                    radius:    rimStar._props.radius * 3,
+                    stroke:    sample(color),
+                    fill:      sample(color),
+                    delay:     delay - calculateParams,
+                    duration:  duration,
+                    opacity:   rimStar._props.opacity * 8,
+                }).then({
+                    duration: 600,
+                    delay:    10,
+                    radius:   rimStar._props.radius,
+                    opacity:  rimStar._props.opacity,
+                });
+            }
+        }
     }
+
+    randRimStarAndDel() {
+        let array = this.curRimStar;
+        let length = array.length;
+        let randKey = baseRandom(0, length - 1);
+        let randArray = length ? array[randKey] : undefined;
+        this.curRimStar.splice(randKey, 1);
+        return randArray
+    }
+
     hideStars(duration, delay) {
         if (this.curentStars) {
             this.curentStars.forEach(function (obj) {

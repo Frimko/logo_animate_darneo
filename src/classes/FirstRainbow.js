@@ -43,15 +43,7 @@ class FirstRainbow {
                 ...this.defaultParamsForBurstChild,
                 duration: 200,
                 delay:    300,
-            },
-            onStart:       function () {
-                console.log('onStart');
-            },
-            onRepeatStart: function () {
-                /*                sound.stop();
-                 sound.play('start');*/
-                console.log('onRepeatStart');
-            },
+            }
         }).tune({x: this.params.COORDINATES_X.str1['D'], y: this.params.EndPointY});
 
         return [firstBurst, this.burstRainbowEnd(500, 'D', 'str1')];
