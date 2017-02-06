@@ -184,6 +184,95 @@ class Stars {
                     repeat:       999,
                     //isForce3d:    true
                 }).play();
+
+
+ const LINE1_DURATION = 1000;
+
+ const ball = new mojs.Shape({
+ shape: 'circle',
+ fill: 'white',
+ radius: 3,
+ x: {
+ [-100]: 100
+ },
+ y:{
+ [-100]: 100
+ },
+ angle: -45,
+ radiusY: 4,
+ duration: 2 * LINE1_DURATION,
+ easing: 'cubic.out',
+ });
+ const trailOpts = {
+ parent: ball.el,
+ fill: 'none',
+ stroke: 'white',
+ shape: 'line',
+ radiusY: 0,
+ radiusX: 30,
+ strokeDasharray: '100%',
+ strokeDashoffset: {
+ '100%': '0%'
+ },
+ angle: -90,
+ duration: LINE1_DURATION / 2,
+ strokeWidth: {
+ 2: 1
+ },
+ isShowStart: true,
+ easing: 'cubic.out',
+ opacity: .75,
+ y: 1,
+ top: -35
+ }
+
+ const trail2Opts = {
+ ...trailOpts,
+ top: -45,
+ radiusX: 40,
+ y: 0
+ }
+ const trail3Opts = {
+ ...trailOpts,
+ y:        3
+ }
+ const trailReturn = {
+ easing: 'quad.in',
+ strokeDashoffset: '100%',
+ duration: LINE1_DURATION / 2,
+ }
+
+ const trail1 = new mojs.Shape(trailOpts)
+ .then({
+ duration: LINE1_DURATION / 5,
+ ...trailReturn
+ });
+
+ const trail2 = new mojs.Shape(trail2Opts)
+ .then({
+ duration: LINE1_DURATION / 6,
+ ...trailReturn
+ });
+ const trail3 = new mojs.Shape(trail3Opts)
+ .then({
+ duration: LINE1_DURATION / 6,
+ ...trailReturn
+ });
+ const timeline = new mojs.Timeline({
+ delay: 500
+ });
+
+ timeline
+ .add(
+ ball,
+ trail1 , trail2,trail3,
+ );
+
+ new MojsPlayer({
+ add: timeline,
+ isPlaying: true,
+ isRepeat: true
+ });
 */
 
             }
