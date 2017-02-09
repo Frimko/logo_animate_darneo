@@ -9,7 +9,7 @@ import MoonRise from './classes/MoonRise';
 import Letters from './classes/Letters';
 import MojsPlayer from 'mojs-player';
 import PointsTimer from './classes/PointsTimer';
-import {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon} from './resorce.js';
+import {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon, star} from './resorce.js';
 import './index.css';
 import './range.css';
 /*global
@@ -105,6 +105,7 @@ class Animation {
         mojs.addShape('mountains', mountains);
         mojs.addShape('horizontLine', horizontLine);
         mojs.addShape('moon', moon);
+        mojs.addShape('star', star);
     }
 
     getTimeLineClasses() {
@@ -236,25 +237,40 @@ class Animation {
 
                 that.blurShineStars(100, 29300);
 
-                that.shootingStar(500, 29600, {y: 55, x: PARAMS.COORDINATES_X.str1.D});
-                that.shootingStar(500, 29800, {y: 55, x: PARAMS.COORDINATES_X.str1.A});
-                that.shootingStar(500, 30100, {y: 55, x: PARAMS.COORDINATES_X.str1.R[0]});
-                that.shootingStar(500, 30400, {y: 55, x: PARAMS.COORDINATES_X.str1.R[1]});
-                that.shootingStar(500, 30700, {y: 55, x: PARAMS.COORDINATES_X.str1.N[0]});
-                that.shootingStar(500, 30700, {y: 55, x: PARAMS.COORDINATES_X.str1.N[1]});
-                that.shootingStar(500, 31070, {y: 55, x: PARAMS.COORDINATES_X.str1.E});
-                that.shootingStar(1000, 31370, {y: 55,x: PARAMS.COORDINATES_X.str1.O});
+                that.shootingStar(500, 29600, {y: 52, x: PARAMS.COORDINATES_X.str1.D});
+                that.shootingStar(500, 29800, {y: 52, x: PARAMS.COORDINATES_X.str1.A});
+                that.shootingStar(500, 30100, {y: 52, x: PARAMS.COORDINATES_X.str1.R[0]});
+                that.shootingStar(500, 30400, {y: 52, x: PARAMS.COORDINATES_X.str1.N[0]});
+                that.shootingStar(500, 30700, {y: 52, x: PARAMS.COORDINATES_X.str1.N[1]});
+                that.shootingStar(500, 31070, {y: 52, x: PARAMS.COORDINATES_X.str1.E});
+                that.shootingStar(500, 31370, {y: 52,x: PARAMS.COORDINATES_X.str1.O});
 
-                that.shootingStar(500, 29600, {y: 55, x: PARAMS.COORDINATES_X.str2.S});
+/*                that.shootingStar(500, 29600, {y: 55, x: PARAMS.COORDINATES_X.str2.S});
                 that.shootingStar(500, 29800, {y: 55, x: PARAMS.COORDINATES_X.str2.T});
                 that.shootingStar(500, 30100, {y: 55, x: PARAMS.COORDINATES_X.str2.U[0]});
                 that.shootingStar(500, 30400, {y: 55, x: PARAMS.COORDINATES_X.str2.U[1]});
                 that.shootingStar(500, 30700, {y: 55, x: PARAMS.COORDINATES_X.str2.D});
                 that.shootingStar(500, 31070, {y: 55, x: PARAMS.COORDINATES_X.str2.I});
-                that.shootingStar(500, 31370, {y: 55, x: PARAMS.COORDINATES_X.str2.O});
+                that.shootingStar(500, 31370, {y: 55, x: PARAMS.COORDINATES_X.str2.O});*/
 
                 that.hideStars(500, durationSound);
-                return that.curentStars;
+                return [
+                    ...that.curentStars,
+                    ...that.shineFarFarStar(300, 30500, {y: -100, x: 0}),
+
+                    ...that.shineFarFarStar(300, 31600, {y: -65, x: PARAMS.COORDINATES_X.str2.U[0]}),
+                    ...that.shineFarFarStar(300, 31800, {y: -79, x: PARAMS.COORDINATES_X.str2.T}),
+                    ...that.shineFarFarStar(300, 32000, {y: -90, x: PARAMS.COORDINATES_X.str2.S}),
+                    ...that.shineFarFarStar(300, 32200, {y: -100, x: 20}),
+                    ...that.shineFarFarStar(300, 32400, {y: -100, x: PARAMS.COORDINATES_X.str1.O}),
+                    ...that.shineFarFarStar(300, 32600, {y: -90, x: PARAMS.COORDINATES_X.str1.E}),
+                    ...that.shineFarFarStar(300, 32800, {y: -87, x: PARAMS.COORDINATES_X.str1.N[1]}),
+                    ...that.shineFarFarStar(300, 33000, {y: -83, x: PARAMS.COORDINATES_X.str1.N[0]}),
+                    ...that.shineFarFarStar(300, 33100, {y: -80, x: PARAMS.COORDINATES_X.str1.R[1]}),
+                    ...that.shineFarFarStar(300, 33300, {y: -79, x: PARAMS.COORDINATES_X.str1.R[0]}),
+                    ...that.shineFarFarStar(300, 33400, {y: -75, x: PARAMS.COORDINATES_X.str1.A}),
+                    ...that.shineFarFarStar(300, 33500, {y: -65, x: PARAMS.COORDINATES_X.str1.D}),
+                ];
             }
         });
         return [...TimeLineStars, ...TimeLineMR, ...TimeLineFR, ...TimeLineLetters];

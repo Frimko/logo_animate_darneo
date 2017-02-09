@@ -193,8 +193,24 @@ class moon extends mojs.CustomShape {
         return 360;
     }
 }
+class star extends mojs.CustomShape {
+    getShape() {
+        return `
+    <g>
+		<line class="st0" x1="50" y1="10" x2="50" y2="90"/>
+<line class="st1" x1="10" y1="50" x2="90" y2="50"/>
+<line class="st1" x1="28.8" y1="71.2" x2="71.2" y2="28.8"/>
+<line class="st1" x1="28.8" y1="28.8" x2="71.2" y2="71.2"/>
+	</g>
+`;
+    }
 
-export {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon}
+    getLength() {
+        return 360;
+    }
+}
+
+export {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon, star}
 
 
 
