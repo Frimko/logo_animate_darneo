@@ -5,9 +5,9 @@ import mojs from 'mo-js';
 import {Howl} from 'howler';
 import FirstRainbow from './classes/FirstRainbow';
 import Stars from './classes/Stars';
-//import MojsPlayer from 'mojs-player';
 import MoonRise from './classes/MoonRise';
 import Letters from './classes/Letters';
+import MojsPlayer from 'mojs-player';
 import PointsTimer from './classes/PointsTimer';
 import {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon} from './resorce.js';
 import './index.css';
@@ -67,8 +67,8 @@ class Animation {
 
     startAnimation() {
         setTimeout(() => {
-            this.sound.play(/*'stars'*/);
-            this.timeline.play(/*17000*/);
+            this.sound.play('stars');
+            this.timeline.play(17000);
         }, +this.delay + 1000);
     }
 
@@ -86,10 +86,10 @@ class Animation {
         let that = this;
         this.sound = new Howl({
             src: [that.soundSrc],
-            /*sprite: {
+            sprite: {
                 start: [0, 34014],
                 stars: [17000, 34014],
-            }*/
+            }
         });
         this.durationSound = PARAMS.endTimeSong;
     }
@@ -215,13 +215,13 @@ class Animation {
                     ...that.star(200, 17900, 30),
                     ...that.star(200, 18200, 35),
                 ];
-                that.shineStars(10, 21200, that.curentStars);
-                that.shineStars(10, 21600, that.curentStars);
-                that.shineStars(10, 21900, that.curentStars);
+                that.shineStars(10, 21200, that.curentStars, 3);
+                that.shineStars(10, 21600, that.curentStars, 3);
+                that.shineStars(10, 21900, that.curentStars, 3);
 
-                that.shineStars(10, 22100, that.curentStars);
-                that.shineStars(10, 22400, that.curentStars);
-                that.shineStars(10, 22700, that.curentStars);
+                that.shineStars(10, 22100, that.curentStars, 4);
+                that.shineStars(10, 22400, that.curentStars, 4);
+                that.shineStars(10, 22700, that.curentStars, 4);
 
                 that.shineStars(10, 23300, that.curentStars, 10);
                 that.shineStars(10, 23900, that.curentStars, 15);
@@ -232,15 +232,26 @@ class Animation {
                 that.shineStars(10, 26300, that.curentStars, 7);
                 that.shineStars(10, 26600, that.curentStars, 4);
                 that.shineStars(10, 27200, that.curentStars, 8);
+                that.shineStars(10, 28170, that.curentStars, 3);
 
-                that.shootingStar(500, 28100);
-                that.shootingStar(500, 28200);
-                that.shootingStar(500, 28300);
-                that.shootingStar(500, 29400);
-                that.shootingStar(500, 29510);
-                that.shootingStar(500, 29620);
-                that.shootingStar(500, 29730);
-                that.shootingStar(500, 29800);
+                that.blurShineStars(100, 29300);
+
+                that.shootingStar(500, 29600, {y: 55, x: PARAMS.COORDINATES_X.str1.D});
+                that.shootingStar(500, 29800, {y: 55, x: PARAMS.COORDINATES_X.str1.A});
+                that.shootingStar(500, 30100, {y: 55, x: PARAMS.COORDINATES_X.str1.R[0]});
+                that.shootingStar(500, 30400, {y: 55, x: PARAMS.COORDINATES_X.str1.R[1]});
+                that.shootingStar(500, 30700, {y: 55, x: PARAMS.COORDINATES_X.str1.N[0]});
+                that.shootingStar(500, 30700, {y: 55, x: PARAMS.COORDINATES_X.str1.N[1]});
+                that.shootingStar(500, 31070, {y: 55, x: PARAMS.COORDINATES_X.str1.E});
+                that.shootingStar(1000, 31370, {y: 55,x: PARAMS.COORDINATES_X.str1.O});
+
+                that.shootingStar(500, 29600, {y: 55, x: PARAMS.COORDINATES_X.str2.S});
+                that.shootingStar(500, 29800, {y: 55, x: PARAMS.COORDINATES_X.str2.T});
+                that.shootingStar(500, 30100, {y: 55, x: PARAMS.COORDINATES_X.str2.U[0]});
+                that.shootingStar(500, 30400, {y: 55, x: PARAMS.COORDINATES_X.str2.U[1]});
+                that.shootingStar(500, 30700, {y: 55, x: PARAMS.COORDINATES_X.str2.D});
+                that.shootingStar(500, 31070, {y: 55, x: PARAMS.COORDINATES_X.str2.I});
+                that.shootingStar(500, 31370, {y: 55, x: PARAMS.COORDINATES_X.str2.O});
 
                 that.hideStars(500, durationSound);
                 return that.curentStars;
@@ -264,12 +275,12 @@ class Animation {
                 $('#js-slider').val((p * 34014) / 100);
             }
         }).add(...this.getTimeLineClasses());
-
-        /*var playerPanel = new MojsPlayer({
+        const MojsCurveEditor = require('mojs-curve-editor').default;
+        var playerPanel = new MojsPlayer({
          add:         this.timeline,
          isPlaying:   false,
          isSaveState: true,
-         });*/
+         });
     }
 
     hidePanel() {
@@ -485,7 +496,102 @@ var loaderAnimationLogo = {
     }
 };
 loaderAnimationLogo.init();
-/*let item = window.animateLogo();
+let item = window.animateLogo();
 item.addOverley(1000);
-item.showPanel();*/
+//item.showPanel();
 //window.timer = item.timelineTimer;
+
+
+
+
+
+let shootingStar = (duration, delay) => {
+    const LINE1_DURATION = 1000;
+    let coordFirst = {x: -100, y: -100};
+    let coordLast = {x: -200, y: 100};
+    let katet1 = coordFirst.y - coordLast.y;
+    let katet2 = coordFirst.x - coordLast.x;
+//45
+    let angle = (Math.atan(katet2/katet1)/ Math.PI) * 180;
+
+    const ball = new mojs.Shape({
+        shape: 'circle',
+        fill: '#F9DD5E',
+        radius: 3,
+        x: {
+            [coordFirst.x]: coordLast.x
+        },
+        y:{
+            [coordFirst.y]: coordLast.y
+        },
+        angle: -90 - angle,
+        radiusX: 4,
+        duration: 2 * LINE1_DURATION,
+        easing: 'cubic.out',
+    });
+    const trailOpts = {
+        parent: ball.el,
+        fill: 'none',
+        stroke: '#F9DD5E',
+        shape: 'line',
+        radiusY: 0,
+        radiusX: 30,
+        strokeDasharray: '100%',
+        strokeDashoffset: {
+            '100%': '0%'
+        },
+        duration: LINE1_DURATION / 2,
+        strokeWidth: { 2: 1 },
+        isShowStart: true,
+        easing: 'cubic.out',
+        opacity: .75,
+        y: 1,
+        x: 10,
+        left: 35
+    };
+
+    const trail2Opts = {
+        ...trailOpts,
+        radiusX: 35,
+        y: 0,
+        x: 15,
+    };
+    const trail3Opts = {
+        ...trailOpts,
+        y: -1
+    };
+    const trailReturn = {
+        easing: 'quad.in',
+        strokeDashoffset: '100%',
+        duration: LINE1_DURATION / 2,
+    };
+
+    const trail1 = new mojs.Shape(trailOpts)
+        .then({
+            duration: LINE1_DURATION / 5,
+            ...trailReturn
+        });
+
+    const trail2 = new mojs.Shape(trail2Opts)
+        .then({
+            duration: LINE1_DURATION / 6,
+            ...trailReturn
+        });
+    const trail3 = new mojs.Shape(trail3Opts)
+        .then({
+            duration: LINE1_DURATION / 6,
+            ...trailReturn
+        });
+    const timeline = new mojs.Timeline({
+        delay: 500
+    });
+
+    return timeline.add( ball, trail1, trail2, trail3, );
+};
+
+
+/*new MojsPlayer({
+    add: shootingStar(),
+    isPlaying: true,
+    isRepeat: true
+});*/
