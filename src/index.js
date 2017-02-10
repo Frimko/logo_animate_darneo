@@ -67,8 +67,8 @@ class Animation {
 
     startAnimation() {
         setTimeout(() => {
-            this.sound.play('stars');
-            this.timeline.play(17000);
+            this.sound.play(/*'stars'*/);
+            this.timeline.play(/*17000*/);
         }, +this.delay + 1000);
     }
 
@@ -86,10 +86,10 @@ class Animation {
         let that = this;
         this.sound = new Howl({
             src: [that.soundSrc],
-            sprite: {
+            /*sprite: {
                 start: [0, 34014],
                 stars: [17000, 34014],
-            }
+            }*/
         });
         this.durationSound = PARAMS.endTimeSong;
     }
@@ -291,12 +291,12 @@ class Animation {
                 $('#js-slider').val((p * 34014) / 100);
             }
         }).add(...this.getTimeLineClasses());
-        const MojsCurveEditor = require('mojs-curve-editor').default;
-        var playerPanel = new MojsPlayer({
+        /*const MojsCurveEditor = require('mojs-curve-editor').default;*/
+        /*var playerPanel = new MojsPlayer({
          add:         this.timeline,
          isPlaying:   false,
          isSaveState: true,
-         });
+         });*/
     }
 
     hidePanel() {
@@ -512,98 +512,14 @@ var loaderAnimationLogo = {
     }
 };
 loaderAnimationLogo.init();
-let item = window.animateLogo();
-item.addOverley(1000);
+/*let item = window.animateLogo();
+item.addOverley(1000);*/
 //item.showPanel();
 //window.timer = item.timelineTimer;
 
 
 
 
-
-let shootingStar = (duration, delay) => {
-    const LINE1_DURATION = 1000;
-    let coordFirst = {x: -100, y: -100};
-    let coordLast = {x: -200, y: 100};
-    let katet1 = coordFirst.y - coordLast.y;
-    let katet2 = coordFirst.x - coordLast.x;
-//45
-    let angle = (Math.atan(katet2/katet1)/ Math.PI) * 180;
-
-    const ball = new mojs.Shape({
-        shape: 'circle',
-        fill: '#F9DD5E',
-        radius: 3,
-        x: {
-            [coordFirst.x]: coordLast.x
-        },
-        y:{
-            [coordFirst.y]: coordLast.y
-        },
-        angle: -90 - angle,
-        radiusX: 4,
-        duration: 2 * LINE1_DURATION,
-        easing: 'cubic.out',
-    });
-    const trailOpts = {
-        parent: ball.el,
-        fill: 'none',
-        stroke: '#F9DD5E',
-        shape: 'line',
-        radiusY: 0,
-        radiusX: 30,
-        strokeDasharray: '100%',
-        strokeDashoffset: {
-            '100%': '0%'
-        },
-        duration: LINE1_DURATION / 2,
-        strokeWidth: { 2: 1 },
-        isShowStart: true,
-        easing: 'cubic.out',
-        opacity: .75,
-        y: 1,
-        x: 10,
-        left: 35
-    };
-
-    const trail2Opts = {
-        ...trailOpts,
-        radiusX: 35,
-        y: 0,
-        x: 15,
-    };
-    const trail3Opts = {
-        ...trailOpts,
-        y: -1
-    };
-    const trailReturn = {
-        easing: 'quad.in',
-        strokeDashoffset: '100%',
-        duration: LINE1_DURATION / 2,
-    };
-
-    const trail1 = new mojs.Shape(trailOpts)
-        .then({
-            duration: LINE1_DURATION / 5,
-            ...trailReturn
-        });
-
-    const trail2 = new mojs.Shape(trail2Opts)
-        .then({
-            duration: LINE1_DURATION / 6,
-            ...trailReturn
-        });
-    const trail3 = new mojs.Shape(trail3Opts)
-        .then({
-            duration: LINE1_DURATION / 6,
-            ...trailReturn
-        });
-    const timeline = new mojs.Timeline({
-        delay: 500
-    });
-
-    return timeline.add( ball, trail1, trail2, trail3, );
-};
 
 
 /*new MojsPlayer({
