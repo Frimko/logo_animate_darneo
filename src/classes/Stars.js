@@ -7,11 +7,6 @@ import mojs from 'mo-js';
 var sample = require('lodash/fp/sample');
 var baseRandom = require('lodash/_baseRandom');
 
-/*const MojsCurveEditor = require('mojs-curve-editor').default;
- const mojsCurve = new MojsCurveEditor({name: 'stars'});
- const mojsCurve2 = new MojsCurveEditor({name: 'starsTail'});
- const EasingMo = mojsCurve.getEasing()
- const EasingMo2 = mojsCurve2.getEasing()*/
 class Stars {
     blurTime = 19690;
 
@@ -37,8 +32,8 @@ class Stars {
                 fill:        '#fdee88',
                 delay:       delay,
                 radius:      'rand(0.2, 2.5)',
-                opacity:     'rand(0.1, 1)',
                 strokeWidth: 0.1,
+                opacity:     'rand(0.1, 1)',
                 duration:    duration,
             }).then({
                 easing:   'sin.in',
@@ -59,9 +54,10 @@ class Stars {
                 fill:   sample(color),
                 delay:  200,
             }).then({
-                opacity: 0,
-                fill:    sample(color),
-                delay:   1000,
+                isShowEnd: false,
+                //opacity: 0,
+                fill:      sample(color),
+                delay:     1000,
             });
 
             let starRim = new mojs.Shape({
@@ -69,7 +65,7 @@ class Stars {
                 className:     'star_rim',
                 x:             (star._props.x).replace('px', ''),
                 y:             (star._props.y).replace('px', ''),
-                stroke:        sample(color),
+                stroke:        star._props.fill,
                 fill:          'none',
                 radius:        star._props.radius / 2 + 0.7,
                 strokeOpacity: star._props.opacity - 0.1,
@@ -108,14 +104,15 @@ class Stars {
     shineFarFarStar(duration, delay, coords) {
 
         const OPT_STEP2 = {
-            delay:       0,
-            duration:    300,
+            delay:    0,
+            duration: 300,
         };
         const OPT_STEP3 = {
-            delay:       100,
-            radius:      0,
-            opacity:     0,
-            duration:    10,
+            delay:     100,
+            radius:    0,
+            opacity:   0,
+            duration:  10,
+            isShowEnd: false,
         };
         let FarFarStar = new mojs.Shape({
             parent:      this.params.parentTag,
@@ -128,11 +125,12 @@ class Stars {
             opacity:     0,
             strokeWidth: 1,
             duration:    duration,
+            isShowEnd:   false,
             ...coords,
         }).then({
             ...OPT_STEP2,
-            opacity:     1,
-            radius:      2,
+            opacity: 1,
+            radius:  2,
         }).then(OPT_STEP3);
 
         let shineFarFarStar = new mojs.Shape({
@@ -146,18 +144,19 @@ class Stars {
             opacity:     0,
             strokeWidth: .5,
             duration:    duration,
+            isShowEnd:   false,
             ...coords,
         }).then({
             ...OPT_STEP2,
-            opacity:     0.8,
-            radius:      6,
+            opacity: 0.8,
+            radius:  6,
         }).then(OPT_STEP3);
 
         return [FarFarStar, shineFarFarStar];
     }
 
     shineStars(duration, delay, arrStars, count) {
-        //let calculateParams = 21090;
+        let sideX = 50;
         count = count ? Number(count) : 1;
         if (!this.curRimStar) {
             this.curRimStar = [];
@@ -172,7 +171,10 @@ class Stars {
             let length = this.curRimStar.length;
             let randKey = baseRandom(0, length - 1);
             let rimStar = length ? this.curRimStar[randKey] : undefined;
-            this.curRimShineStar.push(this.curRimStar[randKey]);
+            let randCurRimStar = this.curRimStar[randKey];
+            if (Number((randCurRimStar._props.x).replace('px', '')) > sideX) {
+                this.curRimShineStar.push(randCurRimStar);
+            }
             this.curRimStar.splice(randKey, 1);
             if (rimStar) {
                 let color = this.color;
@@ -251,8 +253,6 @@ class Stars {
                     duration:  duration,
                     delay:     0,
                     easing:    'cubic.out'
-                    //easing:    mojs.easing.path('M0, 100 C0, 100 51.57142857142857, 55 51.57142857142857, 55 C51.57142857142857, 55 100, 0 100, 0'),
-                    //easing:    EasingMo,
                 });
 
                 const trailOpts = {
@@ -272,9 +272,6 @@ class Stars {
                     x:                10,
                     delay:            delay,
                     left:             {0: radius / 2 * hepotinuze},
-                    /*easing:           mojs.easing.path('M0, 100 C0, 100 43.40092346453452, 96.33252985991308 57.142857142857146, ' +
-                     '92.42857142857143 C70.88479082117978, 88.5246129972298 80, 80 80, 80 C80, 80 86.71428571428571, ' +
-                     '65 86.71428571428571, 65 C86.71428571428571, 65 100, 0 100, 0'),*/
                     easing:           'cubic.out',
                     y:                1
 
@@ -327,9 +324,9 @@ class Stars {
             this.curentStars.forEach(function (obj) {
                 let time = obj.timeline._props.time;
                 return obj.then({
-                    duration: duration,
-                    delay:    delay - time,
-                    opacity:  0
+                    duration:  duration,
+                    delay:     delay - time,
+                    isShowEnd: false,
                 });
             })
         }

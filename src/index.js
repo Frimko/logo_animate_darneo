@@ -15,6 +15,7 @@ import './range.css';
 /*global
  $
  */
+mojs.isDebug = false;
 const PARAMS = {
     COORDINATES_X: {
         str1: {
@@ -46,17 +47,16 @@ class Animation {
 
     constructor(data) {
         this.soundSrc = data.soundSrc;
-        this.sound();
+        this.sound = this.initSound();
         this.initResorce();
-        this.timeLine();
+        this.timeline = this.timeLine();
         this.addOverley(this.delay);
-        this.initPointsTimer(() => {
-            return this.removeOverflow()
-        });
+        this.initLastPointsTimer(()=>{return this.removeOverflow()});
+        this.onEndAnimation = data.onEndAnimation;
     }
 
     start() {
-        return this.startAnimation();
+        return this.startAnimation(500);
     }
 
     stopAnimation() {
@@ -65,26 +65,23 @@ class Animation {
         this.timeline.reset();
     }
 
-    startAnimation() {
+    startAnimation(delay) {
         setTimeout(() => {
             this.sound.play(/*'stars'*/);
             this.timeline.play(/*17000*/);
-        }, +this.delay + 1000);
+        }, +this.delay + delay);
     }
 
-    restart() {
-        this.timelineTimer.stop();
-        this.timelineTimer.reset();
+    restartAnimation() {
+        this.timelineLastPointsTimer.stop();
+        this.timelineLastPointsTimer.reset();
         this.stopAnimation();
-        setTimeout(() => {
-            this.sound.play();
-            this.timeline.play();
-        }, +this.delay + 500);
+        this.startAnimation(500);
     }
 
-    sound() {
+    initSound() {
         let that = this;
-        this.sound = new Howl({
+        let sound = new Howl({
             src: [that.soundSrc],
             /*sprite: {
                 start: [0, 34014],
@@ -92,6 +89,7 @@ class Animation {
             }*/
         });
         this.durationSound = PARAMS.endTimeSong;
+        return sound;
     }
 
     initResorce() {
@@ -277,85 +275,73 @@ class Animation {
     }
     timeLine() {
         let that = this;
-        this.timeline = new mojs.Timeline({
-            onStart () {
-                console.log('start timeline');
-            },
+        let timeline = new mojs.Timeline({
             onPlaybackComplete(){
                 console.log('end onPlaybackComplete');
                 that.showPanel();
-
             },
             onProgress(p){
                 p *= 100;
                 $('#js-slider').val((p * 34014) / 100);
             }
         }).add(...this.getTimeLineClasses());
-        /*const MojsCurveEditor = require('mojs-curve-editor').default;*/
-        /*var playerPanel = new MojsPlayer({
-         add:         this.timeline,
-         isPlaying:   false,
-         isSaveState: true,
-         });*/
+        return timeline
     }
 
     hidePanel() {
         $('.panel').animate({
             opacity: 0
         }, 200, function () {
-            //$('#controls__timeline, .replay_button').hide();
         });
-        //this.timelineTimer.stop();
-        //this.timelineTimer.reset();
     }
 
     showPanel() {
+        console.log('showPanel');
         let that = this;
         $('.panel').animate({
             opacity: 1
         }, 200, function () {
-            that.timelineTimer.play();
+            that.timelineLastPointsTimer.play();
         });
     }
 
     addPanel($tag) {
         let duration = this.durationSound;
         let $range = $('<div id="controls__timeline">').append('<input type="range" step="1" min="0" max="' + duration + '" value="0" id="js-slider">');
-        let $replayButton = $('<div class="replay_button" title="restart">').append(
-            '<svg><path d="M5.03868442,0.355114828 C5.18894493,0.105224017 5.48268728,-0.0462129771 5.76249569,' +
-            '0.0127011539 C6.07958679,0.0633119511 6.33566986,0.367372131 6.34885061,0.703064059 C6.3544995,' +
-            '0.854105656 6.31684022,1.00672884 6.2403919,1.13483742 C6.01933195,1.49425316 5.79074015,' +
-            '1.84852874 5.56591427,2.2055721 C6.05774441,2.20636289 6.54957455,2.19805956 7.04102809,' +
-            '2.21506162 C9.1710367,2.28741925 11.2053908,3.45779393 12.5065187,5.21216977 C13.1512455,' +
-            '6.0749257 13.6238694,7.08476926 13.8483187,8.15748092 C14.1955372,9.7932377 13.9338053,' +
-            '11.5464273 13.1945537,13.0252116 C12.5558524,14.3055066 11.5661666,15.3968019 10.3610698,' +
-            '16.1006083 C9.29907824,16.7312663 8.06874971,17.0539101 6.8482126,16.9926236 C5.29175475,' +
-            '16.9309417 3.75789246,16.3097732 2.57426144,15.2441787 C1.61093718,14.3830044 0.892398202,' +
-            '13.2347719 0.482288694,11.9805731 C0.139212695,10.9481919 -0.00690529302,9.84938406 0.000249969294,' +
-            '8.75848414 C0.0119243447,8.50226698 0.16030189,8.2606795 0.377595908,8.14403743 C0.630666239,' +
-            '7.99932218 0.966586975,8.04360663 1.17634914,8.25118998 C1.34242654,8.40341777 1.41812169,' +
-            '8.6378881 1.41096642,8.86524129 C1.41849828,9.8181477 1.55105893,10.7777759 1.87266914,' +
-            '11.6721635 C2.24135345,12.7199652 2.88570365,13.6661499 3.73868623,14.3387199 C4.60974527,' +
-            '15.0318506 5.68190484,15.4351554 6.77138768,15.5063268 C7.76257981,15.5818476 8.76958883,' +
-            '15.339074 9.63801172,14.8345476 C11.0483516,14.0247748 12.0930199,12.5566663 12.4473937,' +
-            '10.9118154 C12.6654409,9.91818311 12.6323007,8.86168272 12.3193521,7.89414662 C11.6670935,' +
-            '5.84322314 9.9144308,4.23633033 7.89852979,3.80851094 C7.1287742,3.6376995 6.33830601,' +
-            '3.69859061 5.55762923,3.68910109 C5.78207851,4.03467794 6.0008789,4.38460415 6.22231544,' +
-            '4.73255338 C6.33679964,4.91048197 6.38123759,5.14099833 6.32437208,5.34937247 C6.25846835,' +
-            '5.62733646 6.0219681,5.8483633 5.75232769,5.88908918 C5.49360847,5.93732759 5.21831916,' +
-            '5.81277759 5.06881184,5.58740138 C4.61313461,4.87805943 4.16724879,4.16160033 3.71307793,' +
-            '3.45107219 C3.52591133,3.19287804 3.48712227,2.8208096 3.65809538,2.54245022 C4.1145258,' +
-            '1.81057064 4.58112422,1.08620361 5.03868442,0.355114828 L5.03868442,0.355114828 Z"></path>' +
-            '</svg>');
+        let $replayButton = $('<div class="replay_button" title="restart">').append(`<svg><path d="M5.03868442,0.355114828 C5.18894493,0.105224017 5.48268728,-0.0462129771 5.76249569,
+            0.0127011539 C6.07958679,0.0633119511 6.33566986,0.367372131 6.34885061,0.703064059 C6.3544995,
+            0.854105656 6.31684022,1.00672884 6.2403919,1.13483742 C6.01933195,1.49425316 5.79074015,
+            1.84852874 5.56591427,2.2055721 C6.05774441,2.20636289 6.54957455,2.19805956 7.04102809,
+            2.21506162 C9.1710367,2.28741925 11.2053908,3.45779393 12.5065187,5.21216977 C13.1512455,
+            6.0749257 13.6238694,7.08476926 13.8483187,8.15748092 C14.1955372,9.7932377 13.9338053,
+            11.5464273 13.1945537,13.0252116 C12.5558524,14.3055066 11.5661666,15.3968019 10.3610698,
+            16.1006083 C9.29907824,16.7312663 8.06874971,17.0539101 6.8482126,16.9926236 C5.29175475,
+            16.9309417 3.75789246,16.3097732 2.57426144,15.2441787 C1.61093718,14.3830044 0.892398202,
+            13.2347719 0.482288694,11.9805731 C0.139212695,10.9481919 -0.00690529302,9.84938406 0.000249969294,
+            8.75848414 C0.0119243447,8.50226698 0.16030189,8.2606795 0.377595908,8.14403743 C0.630666239,
+            7.99932218 0.966586975,8.04360663 1.17634914,8.25118998 C1.34242654,8.40341777 1.41812169,
+            8.6378881 1.41096642,8.86524129 C1.41849828,9.8181477 1.55105893,10.7777759 1.87266914,
+            11.6721635 C2.24135345,12.7199652 2.88570365,13.6661499 3.73868623,14.3387199 C4.60974527,
+            15.0318506 5.68190484,15.4351554 6.77138768,15.5063268 C7.76257981,15.5818476 8.76958883,
+            15.339074 9.63801172,14.8345476 C11.0483516,14.0247748 12.0930199,12.5566663 12.4473937,
+            10.9118154 C12.6654409,9.91818311 12.6323007,8.86168272 12.3193521,7.89414662 C11.6670935,
+            5.84322314 9.9144308,4.23633033 7.89852979,3.80851094 C7.1287742,3.6376995 6.33830601,
+            3.69859061 5.55762923,3.68910109 C5.78207851,4.03467794 6.0008789,4.38460415 6.22231544,
+            4.73255338 C6.33679964,4.91048197 6.38123759,5.14099833 6.32437208,5.34937247 C6.25846835,
+            5.62733646 6.0219681,5.8483633 5.75232769,5.88908918 C5.49360847,5.93732759 5.21831916,
+            5.81277759 5.06881184,5.58740138 C4.61313461,4.87805943 4.16724879,4.16160033 3.71307793,
+            3.45107219 C3.52591133,3.19287804 3.48712227,2.8208096 3.65809538,2.54245022 C4.1145258,
+            1.81057064 4.58112422,1.08620361 5.03868442,0.355114828 L5.03868442,0.355114828 Z"></path>
+            </svg>`);
         $tag.append($replayButton, $range);
         $replayButton.on('click', () => {
             this.hidePanel();
-            this.restart();
+            this.restartAnimation();
         });
         $('#js-slider').on('input', (e) => {
             this.timeline.setProgress((e.target.valueAsNumber) / duration);
-            //this.timelineTimer.stop();
-            this.timelineTimer.reset();
+            this.timelineLastPointsTimer.stop();
+            this.timelineLastPointsTimer.reset();
         });
     }
 
@@ -374,20 +360,18 @@ class Animation {
     }
 
     removeOverflow() {
+        let that = this;
         this.stopAnimation();
         $('.panel , .overflow_logo').animate({
             opacity: 0
         }, 700, function () {
             $(this).remove();
+            that.onEndAnimation();
+            $('#animate_logo').html('');
         });
-        $('#animate_logo').animate({
-            opacity: 0
-        }, 700, function () {
-            $(this).html('');
-        })
     };
 
-    initPointsTimer(callBackEndTimeLine) {
+    initLastPointsTimer(callbackEndTimeLine) {
         let TimeLinePT = new PointsTimer({
             PARAMS: PARAMS,
             timeLine(o) {
@@ -398,82 +382,21 @@ class Animation {
                 ];
             }
         });
-        this.timelineTimer = new mojs.Timeline({
+        this.timelineLastPointsTimer = new mojs.Timeline({
             onPlaybackComplete () {
                 console.log('hide animation');
-                callBackEndTimeLine();
+                callbackEndTimeLine();
             },
         }).add(...TimeLinePT);
-        //window.timelineTimer = timelineTimer;
+        window.timelineLastPointsTimer = this.timelineLastPointsTimer
+
     }
 }
 
 
-if (process.env.NODE_ENV === 'development') {
-    //var debug = false;
-    /*    var playerPanel = new MojsPlayer({
-     add:         timeline,
-     isPlaying:   false,
-     isSaveState: false,
-     });
-
-     $(playerPanel.stopButton.el).click(function () {
-     sound.stop();
-     removeOverflow();
-     console.log('stopPlayEventButton');
-     });*/
-    //new Animation.addOverflow();
-}
-window.animateLogo = () => {
-    /*    if (debug) {
-     $('.intro__title').after(`<div class="play">play</div>
-     <div class="stop">stop</div>
-     <div class="time"><input value="0" type="text" style="width: 60px; height: 20px"></div>`);
-     $('.play').on('click', function () {
-     let time = $('.time input').val();
-     console.log('play');
-     timeline.reset();
-     sound.stop();
-
-     addOverflow();
-     time = Number(time);
-     //17000
-     console.log(time);
-     if (time > 0) {
-     sound = new Howl({
-     src:    ['din-dong.mp3'],
-     format: ['mp3'],
-     sprite: {
-     start: [time, time + 18000],
-     }
-     });
-     sound.play('start');
-     timeline.play(time);
-     setTimeout(() => {
-     timeline.stop();
-     timeline.reset();
-     sound.stop();
-     console.log('stop timer');
-     }, 18000);
-     } else {
-     timeline.play(0);
-     }
-     });
-     $('.stop').on('click', function () {
-     sound.stop();
-     console.log('stop');
-     timeline.stop();
-     timeline.reset();
-     removeOverflow();
-     //timeline.reset();
-     });
-     addOverflow();
-     }else{
-     }*/
-    return new Animation({soundSrc: 'din-dong.mp3'});
-
+window.animateLogo = (options) => {
+    return new Animation(options);
 };
-//addOverflow();
 
 
 var loaderAnimationLogo = {
@@ -502,8 +425,19 @@ var loaderAnimationLogo = {
             that.hideButton();
         });
     },
+    showButton:    function () {
+        $('.play_animation').show().animate({
+            opacity: 1
+        }, 700);
+    },
     loadScript:    function () {
-        var anim = window.animateLogo();
+        var that = this;
+        var anim = window.animateLogo({
+            soundSrc: 'din-dong.mp3',
+            onEndAnimation: function(){
+                that.showButton();
+            }
+        });
         anim.start();
         /*$.getScript(this.scriptPath, function() {
          //колбек, выдаст нам объект при оформлении в форме
@@ -518,12 +452,10 @@ item.addOverley(1000);*/
 //window.timer = item.timelineTimer;
 
 
-
-
-
-
-/*new MojsPlayer({
-    add: shootingStar(),
-    isPlaying: true,
-    isRepeat: true
-});*/
+/*
+var playerPanel = new MojsPlayer({
+    add:         item.timeline,
+    isPlaying:   false,
+    isSaveState: true,
+});
+*/

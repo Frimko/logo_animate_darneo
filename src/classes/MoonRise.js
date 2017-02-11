@@ -103,7 +103,7 @@ class MoonRise {
                 return obj.then({
                     duration: duration,
                     delay:    delay - time,
-                    opacity:  0
+                    isShowEnd:        false,
                 });
             })
         }

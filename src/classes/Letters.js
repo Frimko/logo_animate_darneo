@@ -149,6 +149,7 @@ class Letters {
             count:    3,
             radius:   2,
             degree:   0,
+            isSoftHide:       false,
             children: {
                 className:        'label_d_1',
                 x:                this.params.COORDINATES_X.str1['D'],
@@ -174,6 +175,7 @@ class Letters {
             x:        +this.params.COORDINATES_X.str1.D + 34,
             y:        3,
             degree:   0,
+            isSoftHide:       false,
             children: {
                 className:        'label_d_2',
                 origin:           '50% 100%',
