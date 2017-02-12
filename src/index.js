@@ -7,7 +7,6 @@ import FirstRainbow from './classes/FirstRainbow';
 import Stars from './classes/Stars';
 import MoonRise from './classes/MoonRise';
 import Letters from './classes/Letters';
-import MojsPlayer from 'mojs-player';
 import PointsTimer from './classes/PointsTimer';
 import {elipceD, elipceR, elipceR2, S, S2, U1, U2, mountains, horizontLine, moon, star} from './resorce.js';
 import './index.css';
@@ -51,7 +50,9 @@ class Animation {
         this.initResorce();
         this.timeline = this.timeLine();
         this.addOverley(this.delay);
-        this.initLastPointsTimer(()=>{return this.removeOverflow()});
+        this.initLastPointsTimer(() => {
+            return this.removeOverflow()
+        });
         this.onEndAnimation = data.onEndAnimation;
     }
 
@@ -67,8 +68,8 @@ class Animation {
 
     startAnimation(delay) {
         setTimeout(() => {
-            this.sound.play(/*'stars'*/);
-            this.timeline.play(/*17000*/);
+            this.sound.play();
+            this.timeline.play();
         }, +this.delay + delay);
     }
 
@@ -83,10 +84,6 @@ class Animation {
         let that = this;
         let sound = new Howl({
             src: [that.soundSrc],
-            /*sprite: {
-                start: [0, 34014],
-                stars: [17000, 34014],
-            }*/
         });
         this.durationSound = PARAMS.endTimeSong;
         return sound;
@@ -241,15 +238,15 @@ class Animation {
                 that.shootingStar(500, 30400, {y: 52, x: PARAMS.COORDINATES_X.str1.N[0]});
                 that.shootingStar(500, 30700, {y: 52, x: PARAMS.COORDINATES_X.str1.N[1]});
                 that.shootingStar(500, 31070, {y: 52, x: PARAMS.COORDINATES_X.str1.E});
-                that.shootingStar(500, 31370, {y: 52,x: PARAMS.COORDINATES_X.str1.O});
+                that.shootingStar(500, 31370, {y: 52, x: PARAMS.COORDINATES_X.str1.O});
 
-/*                that.shootingStar(500, 29600, {y: 55, x: PARAMS.COORDINATES_X.str2.S});
-                that.shootingStar(500, 29800, {y: 55, x: PARAMS.COORDINATES_X.str2.T});
-                that.shootingStar(500, 30100, {y: 55, x: PARAMS.COORDINATES_X.str2.U[0]});
-                that.shootingStar(500, 30400, {y: 55, x: PARAMS.COORDINATES_X.str2.U[1]});
-                that.shootingStar(500, 30700, {y: 55, x: PARAMS.COORDINATES_X.str2.D});
-                that.shootingStar(500, 31070, {y: 55, x: PARAMS.COORDINATES_X.str2.I});
-                that.shootingStar(500, 31370, {y: 55, x: PARAMS.COORDINATES_X.str2.O});*/
+                /*                that.shootingStar(500, 29600, {y: 55, x: PARAMS.COORDINATES_X.str2.S});
+                 that.shootingStar(500, 29800, {y: 55, x: PARAMS.COORDINATES_X.str2.T});
+                 that.shootingStar(500, 30100, {y: 55, x: PARAMS.COORDINATES_X.str2.U[0]});
+                 that.shootingStar(500, 30400, {y: 55, x: PARAMS.COORDINATES_X.str2.U[1]});
+                 that.shootingStar(500, 30700, {y: 55, x: PARAMS.COORDINATES_X.str2.D});
+                 that.shootingStar(500, 31070, {y: 55, x: PARAMS.COORDINATES_X.str2.I});
+                 that.shootingStar(500, 31370, {y: 55, x: PARAMS.COORDINATES_X.str2.O});*/
 
                 that.hideStars(500, durationSound);
                 return [
@@ -273,6 +270,7 @@ class Animation {
         });
         return [...TimeLineStars, ...TimeLineMR, ...TimeLineFR, ...TimeLineLetters];
     }
+
     timeLine() {
         let that = this;
         let timeline = new mojs.Timeline({
@@ -306,6 +304,7 @@ class Animation {
     }
 
     addPanel($tag) {
+        let timerID;
         let duration = this.durationSound;
         let $range = $('<div id="controls__timeline">').append('<input type="range" step="1" min="0" max="' + duration + '" value="0" id="js-slider">');
         let $replayButton = $('<div class="replay_button" title="restart">').append(`<svg><path d="M5.03868442,0.355114828 C5.18894493,0.105224017 5.48268728,-0.0462129771 5.76249569,
@@ -339,9 +338,13 @@ class Animation {
             this.restartAnimation();
         });
         $('#js-slider').on('input', (e) => {
+            clearTimeout(timerID);
             this.timeline.setProgress((e.target.valueAsNumber) / duration);
             this.timelineLastPointsTimer.stop();
             this.timelineLastPointsTimer.reset();
+            timerID = setTimeout(() => {
+                this.timelineLastPointsTimer.play();
+            }, 3000)
         });
     }
 
@@ -392,70 +395,72 @@ class Animation {
 
     }
 }
+if (process.env.NODE_ENV === 'development') {
+    var loaderAnimationLogo = {
+        scriptPath:      "/static/js/animate_logo.js",
+        init:            function () {
+            this.addPlayButton();
+        },
+        addPlayButton:   function () {
+            $('.intro__title').after('<div class="play_animation swing animated infinite">' +
+                '<svg fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="glass" x="0px" y="0px" viewBox="0 0 18 18" enable-background="new 0 0 18 18" xml:space="preserve">' +
+                '<path d="M8.73794928,0.348150316 C9.11206309,0.27529234 9.51838182,0.296610044 9.86109583,0.47605654 C10.2191072,0.665217432 10.5062677,0.969062175 10.7198937,1.31068513 C10.7491465,1.3573682 10.7802779,1.41268629 10.8403937,1.42132131 C11.9978922,1.69278473 13.1035944,2.21790185 14.0149936,2.98938685 C14.7361155,3.59491758 15.3281492,4.36073586 15.7033365,5.22882515 C15.9494358,5.79576814 16.1067031,6.40345762 16.1542054,7.02059166 C16.1778223,7.33469049 16.1759437,7.65013854 16.1759437,7.9650469 C16.1821163,9.17907665 16.1746018,10.3931064 16.1791642,11.6068663 C16.1716497,12.0920465 16.1839949,12.6039412 16.4147969,13.0421684 C16.4695452,13.0872324 16.5454952,13.0920896 16.6104417,13.117455 C16.9434943,13.2264721 17.2784254,13.4040297 17.4705815,13.7097634 C17.6031584,13.9437184 17.6587119,14.223547 17.6146985,14.4898834 C17.5159367,15.0257943 17.019981,15.4640215 16.4746443,15.4731962 C14.8845265,15.4972124 13.2941402,15.4702279 11.7040223,15.4904662 C11.3795578,16.3329203 10.6525317,17.0293886 9.76850669,17.2366291 C9.2373939,17.354551 8.66817196,17.3340429 8.15852911,17.1330088 C7.44572691,16.8615454 6.861476,16.2759832 6.58397695,15.5625147 C6.56867961,15.5352604 6.56545912,15.4807518 6.52037223,15.492625 C5.12294712,15.4729264 3.72552201,15.4907361 2.3280969,15.4812915 C2.13218364,15.4767042 1.93600201,15.4845297 1.7406255,15.4694184 C1.41401394,15.440545 1.09384337,15.2883528 0.887463517,15.0282229 C0.66122396,14.7581087 0.578564668,14.3781678 0.660418838,14.036275 C0.727780793,13.7456527 0.906786468,13.4755385 1.16630444,13.3249653 C1.37617316,13.2019163 1.6120742,13.1371536 1.83965562,13.0559305 C1.98350426,12.746419 2.06267469,12.4072247 2.07179941,12.0656017 C2.08468138,10.5010441 2.0667003,8.93648657 2.08468138,7.37192901 C2.09648985,6.29255159 2.44376623,5.22612671 3.03741024,4.32970376 C3.49445171,3.64456895 4.08702222,3.05307012 4.76171528,2.58489017 C5.57945185,2.01848687 6.51205263,1.63422851 7.47524808,1.40189252 C7.75838299,0.922648946 8.18134093,0.479834361 8.73794928,0.348150316 L8.73794928,0.348150316 Z M5.89264468,3.58736194 C5.14575894,4.04609734 4.4949512,4.68104111 4.0778975,5.46008176 C3.7663149,6.03565977 3.57952637,6.68382591 3.56932815,7.34089691 C3.54597958,8.8800891 3.57362214,10.4195511 3.55778805,11.9587433 C3.55215219,12.3659385 3.47781251,12.7677367 3.41984365,13.1698048 C3.35623894,13.4005217 3.23439699,13.6112702 3.09859958,13.8063676 C7.12662983,13.8063676 11.1543917,13.8060978 15.182422,13.8066375 C15.0345477,13.6269211 14.9113639,13.4215696 14.8448071,13.1973289 C14.6166889,12.1152531 14.7119618,11.0034943 14.6963961,9.90657703 C14.6859295,9.01663035 14.7124985,8.12614398 14.6786833,7.23646714 C14.6472836,6.34840937 14.2919559,5.48949479 13.7436672,4.79896309 C13.1089619,3.99995396 12.2337932,3.40926467 11.2794541,3.06656234 C9.5258963,2.43782499 7.48786167,2.60809678 5.89264468,3.58736194 L5.89264468,3.58736194 Z"></path>' +
+                '</svg></div>');
+            this.events();
+        },
+        addLoaderButton: function () {
+            $('.intro__title').after('<div class="play_loader">' +
+                '<div class="loader"></div>' +
+                '</div>');
+            this.events();
+        },
+        hidePlayButton:  function () {
+            $('.play_animation').animate({
+                opacity: 0
+            }, 700, function () {
+                $(this).hide();
+            });
+        },
+        events:          function () {
+            var that = this;
+            $('.play_animation').on('click', function () {
+                that.loadScript();
+                that.hidePlayButton();
+            });
+        },
+        showButton:      function () {
+            $('.play_animation').show().animate({
+                opacity: 1
+            }, 700);
+        },
+        loadScript:      function () {
+            var that = this;
+            if (process.env.NODE_ENV === 'development') {
+                that.hideLoaderButton();
 
-
+                var anim = window.animateLogo({
+                    soundSrc:       'din-dong.mp3',
+                    onEndAnimation: function () {
+                        that.showButton();
+                    }
+                });
+                anim.sound.on('load', function(){
+                    anim.start();
+                });
+                /*                $.getScript(this.scriptPath, function() {
+                 var anim = window.animateLogo({
+                 soundSrc:       '/din-dong.mp3',
+                 onEndAnimation: function () {
+                 that.showButton();
+                 }
+                 });
+                 anim.start();
+                 });*/
+            }
+        }
+    };
+    loaderAnimationLogo.init();
+}
 window.animateLogo = (options) => {
     return new Animation(options);
 };
-
-
-var loaderAnimationLogo = {
-    scriptPath:    "./animate_logo.js",
-    init:          function () {
-        this.addPlayButton();
-    },
-    addPlayButton: function () {
-        $('.intro__title').after('<div class="play_animation">' +
-            '<svg fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="glass" x="0px" y="0px" viewBox="0 0 18 18" enable-background="new 0 0 18 18" xml:space="preserve">' +
-            '<path d="M8.73794928,0.348150316 C9.11206309,0.27529234 9.51838182,0.296610044 9.86109583,0.47605654 C10.2191072,0.665217432 10.5062677,0.969062175 10.7198937,1.31068513 C10.7491465,1.3573682 10.7802779,1.41268629 10.8403937,1.42132131 C11.9978922,1.69278473 13.1035944,2.21790185 14.0149936,2.98938685 C14.7361155,3.59491758 15.3281492,4.36073586 15.7033365,5.22882515 C15.9494358,5.79576814 16.1067031,6.40345762 16.1542054,7.02059166 C16.1778223,7.33469049 16.1759437,7.65013854 16.1759437,7.9650469 C16.1821163,9.17907665 16.1746018,10.3931064 16.1791642,11.6068663 C16.1716497,12.0920465 16.1839949,12.6039412 16.4147969,13.0421684 C16.4695452,13.0872324 16.5454952,13.0920896 16.6104417,13.117455 C16.9434943,13.2264721 17.2784254,13.4040297 17.4705815,13.7097634 C17.6031584,13.9437184 17.6587119,14.223547 17.6146985,14.4898834 C17.5159367,15.0257943 17.019981,15.4640215 16.4746443,15.4731962 C14.8845265,15.4972124 13.2941402,15.4702279 11.7040223,15.4904662 C11.3795578,16.3329203 10.6525317,17.0293886 9.76850669,17.2366291 C9.2373939,17.354551 8.66817196,17.3340429 8.15852911,17.1330088 C7.44572691,16.8615454 6.861476,16.2759832 6.58397695,15.5625147 C6.56867961,15.5352604 6.56545912,15.4807518 6.52037223,15.492625 C5.12294712,15.4729264 3.72552201,15.4907361 2.3280969,15.4812915 C2.13218364,15.4767042 1.93600201,15.4845297 1.7406255,15.4694184 C1.41401394,15.440545 1.09384337,15.2883528 0.887463517,15.0282229 C0.66122396,14.7581087 0.578564668,14.3781678 0.660418838,14.036275 C0.727780793,13.7456527 0.906786468,13.4755385 1.16630444,13.3249653 C1.37617316,13.2019163 1.6120742,13.1371536 1.83965562,13.0559305 C1.98350426,12.746419 2.06267469,12.4072247 2.07179941,12.0656017 C2.08468138,10.5010441 2.0667003,8.93648657 2.08468138,7.37192901 C2.09648985,6.29255159 2.44376623,5.22612671 3.03741024,4.32970376 C3.49445171,3.64456895 4.08702222,3.05307012 4.76171528,2.58489017 C5.57945185,2.01848687 6.51205263,1.63422851 7.47524808,1.40189252 C7.75838299,0.922648946 8.18134093,0.479834361 8.73794928,0.348150316 L8.73794928,0.348150316 Z M5.89264468,3.58736194 C5.14575894,4.04609734 4.4949512,4.68104111 4.0778975,5.46008176 C3.7663149,6.03565977 3.57952637,6.68382591 3.56932815,7.34089691 C3.54597958,8.8800891 3.57362214,10.4195511 3.55778805,11.9587433 C3.55215219,12.3659385 3.47781251,12.7677367 3.41984365,13.1698048 C3.35623894,13.4005217 3.23439699,13.6112702 3.09859958,13.8063676 C7.12662983,13.8063676 11.1543917,13.8060978 15.182422,13.8066375 C15.0345477,13.6269211 14.9113639,13.4215696 14.8448071,13.1973289 C14.6166889,12.1152531 14.7119618,11.0034943 14.6963961,9.90657703 C14.6859295,9.01663035 14.7124985,8.12614398 14.6786833,7.23646714 C14.6472836,6.34840937 14.2919559,5.48949479 13.7436672,4.79896309 C13.1089619,3.99995396 12.2337932,3.40926467 11.2794541,3.06656234 C9.5258963,2.43782499 7.48786167,2.60809678 5.89264468,3.58736194 L5.89264468,3.58736194 Z"></path>' +
-            '</svg></div>');
-        this.events();
-    },
-    hideButton:    function () {
-        $('.play_animation').animate({
-            opacity: 0
-        }, 700, function () {
-            $(this).hide();
-        });
-    },
-    events:        function () {
-        var that = this;
-        $('.play_animation').on('click', function () {
-            that.loadScript();
-            that.hideButton();
-        });
-    },
-    showButton:    function () {
-        $('.play_animation').show().animate({
-            opacity: 1
-        }, 700);
-    },
-    loadScript:    function () {
-        var that = this;
-        var anim = window.animateLogo({
-            soundSrc: 'din-dong.mp3',
-            onEndAnimation: function(){
-                that.showButton();
-            }
-        });
-        anim.start();
-        /*$.getScript(this.scriptPath, function() {
-         //колбек, выдаст нам объект при оформлении в форме
-         window.animateLogo();
-         });*/
-    }
-};
-loaderAnimationLogo.init();
-/*let item = window.animateLogo();
-item.addOverley(1000);*/
-//item.showPanel();
-//window.timer = item.timelineTimer;
-
-
-/*
-var playerPanel = new MojsPlayer({
-    add:         item.timeline,
-    isPlaying:   false,
-    isSaveState: true,
-});
-*/
