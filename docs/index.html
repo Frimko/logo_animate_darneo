@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/reset.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+	<script src="js/vendor/modernizr-custom.js"></script>
+    <link href="static/css/main.e92dc872.css" rel="stylesheet">
+    <title>Animate Logo</title>
+</head>
+<body class="not-loaded">
+
+<div class="respon-meter"></div>
+
+<div class="wrap">
+	<div class="wrapper">
+
+		<header class="header">
+			<div class="container header__inner">
+
+				<div class="header__switcher"><span></span><span></span></div>
+
+				<a class="header__logo" href="#"></a>
+
+				<nav class="header__menu">
+					<ul>
+						<li><a href="#">Главная</a></li>
+						<li><a href="#">О нас</a></li>
+						<li class="active"><a href="#">1С-Битрикс</a>
+							<div class="header__submenu">
+								<div class="container">
+									<ul>
+										<li><a href="#">Готовые решения</a></li>
+										<li><a href="#">Интеграция 1С</a></li>
+										<li><a href="#">Битрикс 24</a></li>
+										<li><a href="#">Композитный сайт</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li><a href="#">Услуги</a></li>
+						<li><a href="#">Наши работы</a></li>
+						<li><a href="#">Контакты</a></li>
+						<li><a href="#">Блог</a></li>
+					</ul>
+				</nav>
+
+				<div class="header__right">
+					<a href="#quote" class="btn btn--thin quote-open">Оставить заявку</a>
+				</div>
+
+			</div>
+
+			<div class="header__overlay">
+				<div class="header__overlay-scroll">
+					<div class="container">
+					</div>
+				</div>
+			</div>
+
+		</header>
+
+		<div class="h-overlay"></div>
+
+		<div class="intro">
+			<div class="intro__inner">
+				<div class="intro__middle text-align-center">
+					<div class="container">
+						<h1 class="intro__title">
+							<div class="logo"></div>
+                            <div id="animate_logo"></div>
+                            <span class="intro__title-inner"></span>
+                        </h1>
+						<div class="intro__summary">
+							<p>Разработка, дизайн и техническая поддержка веб-сайтов на системе управления сайтом 1С-Битрикс</p>
+						</div>
+						<div class="intro__actions">
+							<a href="#quote" class="btn quote-open">Заказать бесплатную консультацию</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="sidebar sidebar--quote" id="quote">
+
+		<div class="sidebar__close quote-close sidebar-close"></div>
+
+		<div class="sidebar__scroll">
+
+			<div class="sidebar__title nowrap"><span class="icon-mail-w-arrow-outline"></span>Оставить заявку</div>
+
+			<form class="form form-validate" action="" method="post" data-action="ajax/form-success.json" data-message="#quote-message" autocomplete="off">
+
+				<div class="form__items">
+
+					<div class="form__item">
+						<div class="form__item-field">
+							<div class="textfield-icon"><span class="icon-user-grey"></span></div>
+							<input type="text" class="textfield required" placeholder="Введите ваше имя">
+						</div>
+					</div>
+
+					<div class="form__item">
+						<div class="form__item-field">
+							<div class="textfield-icon"><span class="icon-phone-grey"></span></div>
+							<input type="text" class="textfield mask-phone required" placeholder="Введите ваш телефон">
+						</div>
+					</div>
+
+					<div class="form__item">
+						<div class="form__item-field">
+							<div class="textfield-icon"><span class="icon-paper-aero-grey"></span></div>
+							<input type="text" class="textfield email-validate required" placeholder="Введите ваш e-mail">
+						</div>
+					</div>
+
+				</div>
+
+				<div class="form__actions text-align-right">
+					<div class="form__actions-tip text-align-left">Или напишите нам<br>на: <a href="mailto:info@darneo.ru">info@darneo.ru</a></div>
+					<button type="submit" class="btn">Отправить</button>
+				</div>
+
+			</form>
+
+		</div>
+
+		<div class="sidebar__footer text-align-center">
+			<a href="#contacts" class="btn btn--nobg btn--muted-blue overlay-open"><span class="icon-paper-aero"></span>Схема проезда</a>
+		</div>
+
+	</div>
+
+	<div class="overlay" id="contacts">
+		<div class="overlay__inner">
+
+			<div class="map map--absolute" data-center="52.263435, 104.263166" data-point="52.263435, 104.263166" data-zoom="17" data-pan-by-selector=".map-marker-offset"></div>
+
+			<div class="map-marker-offset"></div>
+
+			<div class="sidebar active">
+
+				<div class="sidebar__close overlay-close"></div>
+
+				<div class="sidebar__title"><span class="icon-map-marker-outline"></span>Наш адрес</div>
+
+				<div class="contacts">
+
+					<div class="contact">
+						<p>г. Иркутск, ул. Лермонтова, 83А,<br>
+							офис 310</p>
+					</div>
+
+					<div class="contact">
+						<p><span class="icon-phone-outline"></span>+7 (3952) <strong>71-60-42</strong></p>
+						<p><span class="icon-mail-outline"></span><a href="mailto:info@darneo.ru">info@darneo.ru</a></p>
+					</div>
+
+				</div>
+
+				<div class="sidebar__footer text-align-center">
+					<a href="#" class="btn btn--muted-blue overlay-close"><span class="icon-paper-aero"></span>Схема проезда</a>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+</div>
+
+<div class="clear"></div>
+<script src="js/vendor/jquery-1.11.3.min.js"></script>
+<script src="static/js/animate_logo.js"></script>
+<script>
+    if(!loaderAnimationLogo){
+        var loaderAnimationLogo = {
+            scriptPath:    "/static/js/animate_logo.js",
+            init:          function () {
+                this.addPlayButton();
+            },
+            addPlayButton:   function () {
+                $('.intro__title').after('<div class="play_animation swing animated infinite">' +
+                    '<svg fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="glass" x="0px" y="0px" viewBox="0 0 18 18" enable-background="new 0 0 18 18" xml:space="preserve">' +
+                    '<path d="M8.73794928,0.348150316 C9.11206309,0.27529234 9.51838182,0.296610044 9.86109583,0.47605654 C10.2191072,0.665217432 10.5062677,0.969062175 10.7198937,1.31068513 C10.7491465,1.3573682 10.7802779,1.41268629 10.8403937,1.42132131 C11.9978922,1.69278473 13.1035944,2.21790185 14.0149936,2.98938685 C14.7361155,3.59491758 15.3281492,4.36073586 15.7033365,5.22882515 C15.9494358,5.79576814 16.1067031,6.40345762 16.1542054,7.02059166 C16.1778223,7.33469049 16.1759437,7.65013854 16.1759437,7.9650469 C16.1821163,9.17907665 16.1746018,10.3931064 16.1791642,11.6068663 C16.1716497,12.0920465 16.1839949,12.6039412 16.4147969,13.0421684 C16.4695452,13.0872324 16.5454952,13.0920896 16.6104417,13.117455 C16.9434943,13.2264721 17.2784254,13.4040297 17.4705815,13.7097634 C17.6031584,13.9437184 17.6587119,14.223547 17.6146985,14.4898834 C17.5159367,15.0257943 17.019981,15.4640215 16.4746443,15.4731962 C14.8845265,15.4972124 13.2941402,15.4702279 11.7040223,15.4904662 C11.3795578,16.3329203 10.6525317,17.0293886 9.76850669,17.2366291 C9.2373939,17.354551 8.66817196,17.3340429 8.15852911,17.1330088 C7.44572691,16.8615454 6.861476,16.2759832 6.58397695,15.5625147 C6.56867961,15.5352604 6.56545912,15.4807518 6.52037223,15.492625 C5.12294712,15.4729264 3.72552201,15.4907361 2.3280969,15.4812915 C2.13218364,15.4767042 1.93600201,15.4845297 1.7406255,15.4694184 C1.41401394,15.440545 1.09384337,15.2883528 0.887463517,15.0282229 C0.66122396,14.7581087 0.578564668,14.3781678 0.660418838,14.036275 C0.727780793,13.7456527 0.906786468,13.4755385 1.16630444,13.3249653 C1.37617316,13.2019163 1.6120742,13.1371536 1.83965562,13.0559305 C1.98350426,12.746419 2.06267469,12.4072247 2.07179941,12.0656017 C2.08468138,10.5010441 2.0667003,8.93648657 2.08468138,7.37192901 C2.09648985,6.29255159 2.44376623,5.22612671 3.03741024,4.32970376 C3.49445171,3.64456895 4.08702222,3.05307012 4.76171528,2.58489017 C5.57945185,2.01848687 6.51205263,1.63422851 7.47524808,1.40189252 C7.75838299,0.922648946 8.18134093,0.479834361 8.73794928,0.348150316 L8.73794928,0.348150316 Z M5.89264468,3.58736194 C5.14575894,4.04609734 4.4949512,4.68104111 4.0778975,5.46008176 C3.7663149,6.03565977 3.57952637,6.68382591 3.56932815,7.34089691 C3.54597958,8.8800891 3.57362214,10.4195511 3.55778805,11.9587433 C3.55215219,12.3659385 3.47781251,12.7677367 3.41984365,13.1698048 C3.35623894,13.4005217 3.23439699,13.6112702 3.09859958,13.8063676 C7.12662983,13.8063676 11.1543917,13.8060978 15.182422,13.8066375 C15.0345477,13.6269211 14.9113639,13.4215696 14.8448071,13.1973289 C14.6166889,12.1152531 14.7119618,11.0034943 14.6963961,9.90657703 C14.6859295,9.01663035 14.7124985,8.12614398 14.6786833,7.23646714 C14.6472836,6.34840937 14.2919559,5.48949479 13.7436672,4.79896309 C13.1089619,3.99995396 12.2337932,3.40926467 11.2794541,3.06656234 C9.5258963,2.43782499 7.48786167,2.60809678 5.89264468,3.58736194 L5.89264468,3.58736194 Z"></path>' +
+                    '</svg></div>');
+                this.events();
+            },
+            addLoaderButton: function () {
+                $('.intro__title').after('<div class="play_loader">' +
+                    '<div class="loader"></div>' +
+                    '</div>');
+                this.events();
+            },
+            hidePlayButton:  function () {
+                $('.play_animation').animate({
+                    opacity: 0
+                }, 700, function () {
+                    $(this).hide();
+                });
+            },
+            hideLoaderButton: function(){
+                $('.play_loader').animate({
+                    opacity: 0
+                }, 700, function () {
+                    $(this).hide();
+                });
+            },
+            events:          function () {
+                var that = this;
+                $('.play_animation').on('click', function () {
+                    that.loadScript();
+                    that.hidePlayButton();
+                });
+            },
+            showButton:      function () {
+                $('.play_animation').show().animate({
+                    opacity: 1
+                }, 700);
+            },
+            loadScript:      function () {
+                var that = this;
+                //this.addLoaderButton();
+                var anim = window.animateLogo({
+                    soundSrc:       'din-dong.mp3',
+                    onEndAnimation: function () {
+                        that.showButton();
+                    }
+                });
+                anim.start();
+/*                    $.getScript(this.scriptPath, function() {
+                        that.hideLoaderButton();
+                        var anim = window.animateLogo({
+                                soundSrc:       '/din-dong.mp3',
+                                onEndAnimation: function () {
+                                    that.showButton();
+                                }
+                            });
+                        anim.sound.on('load', function(){
+                            anim.start();
+                        });
+                    });*/
+            }
+        };
+        loaderAnimationLogo.init();
+    }
+</script>
+</body>
+</html>
